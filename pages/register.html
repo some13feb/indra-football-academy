@@ -471,6 +471,32 @@
         auth.onAuthStateChanged(function(user) {
             if (user) {
                 currentUser = user;
+            } else {
+                // User signed out — reset page back to Step 1
+                currentUser = null;
+                selectedProgram = null;
+                document.getElementById('step1').classList.remove('d-none');
+                document.getElementById('step2').classList.add('d-none');
+                document.getElementById('step3').classList.add('d-none');
+                document.getElementById('stepSuccess').classList.add('d-none');
+                // Reset step indicators
+                document.getElementById('dot1').className = 'step-dot active';
+                document.getElementById('dot1').innerHTML = '1';
+                document.getElementById('dot2').className = 'step-dot';
+                document.getElementById('dot2').innerHTML = '2';
+                document.getElementById('dot3').className = 'step-dot';
+                document.getElementById('dot3').innerHTML = '3';
+                document.getElementById('line1').classList.remove('active');
+                document.getElementById('line2').classList.remove('active');
+                // Reset navbar
+                var authArea = document.getElementById('navAuthArea');
+                if (authArea) {
+                    authArea.innerHTML = 
+                        '<a href="register.html" class="btn btn-warning btn-sm fw-semibold px-3 py-1">Register</a>' +
+                        '<a href="signin.html" class="btn btn-outline-light btn-sm px-3 py-1"><i class="bi bi-person-circle me-1"></i>Sign In</a>';
+                }
+                return;
+            }
                 // Update navbar — hide register, show profile dropdown
                 var authArea = document.getElementById('navAuthArea');
                 if (authArea) {
