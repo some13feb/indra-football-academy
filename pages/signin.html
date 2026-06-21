@@ -101,11 +101,11 @@
                                         <ul class="list-unstyled">
                                             <li class="mb-3 d-flex align-items-center">
                                                 <i class="bi bi-shield-check text-warning me-2 fs-5"></i>
-                                                <small>Secure — no passwords stored</small>
+                                                <small>Secure authentication</small>
                                             </li>
                                             <li class="mb-3 d-flex align-items-center">
                                                 <i class="bi bi-lightning text-warning me-2 fs-5"></i>
-                                                <small>One-click sign in</small>
+                                                <small>One-click Google sign in</small>
                                             </li>
                                             <li class="mb-3 d-flex align-items-center">
                                                 <i class="bi bi-graph-up text-warning me-2 fs-5"></i>
@@ -128,8 +128,8 @@
                                     <h4 class="fw-bold mb-1">Sign In</h4>
                                     <p class="text-muted mb-4">Choose your preferred method</p>
                                     
-                                    <!-- Google Sign-In Button (only option) -->
-                                    <button type="button" class="social-btn w-100 d-flex align-items-center justify-content-center gap-2 py-3 mb-4" onclick="doGoogleSignIn()">
+                                    <!-- Google Sign-In Button -->
+                                    <button type="button" class="social-btn w-100 d-flex align-items-center justify-content-center gap-2 py-3 mb-3" id="googleBtn" onclick="doGoogleSignIn()">
                                         <svg width="20" height="20" viewBox="0 0 24 24">
                                             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                                             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -158,21 +158,19 @@
                                         </button>
                                     </form>
                                     
-                                    <!-- Error Message -->
-                                    <div id="emailError" class="alert alert-danger mt-3 d-none small"></div>
+                                    <!-- Status Messages -->
+                                    <div id="authError" class="alert alert-danger mt-3 d-none small"></div>
+                                    <div id="authStatus" class="text-center d-none mt-3">
+                                        <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                                        <span class="text-muted ms-2">Signing in...</span>
+                                    </div>
                                     
                                     <hr class="my-3">
-                                    
-                                    <!-- Loading/Error state -->
-                                    <div id="authStatus" class="text-center d-none mb-3">
-                                        <div class="spinner-border text-primary" role="status"></div>
-                                        <p class="text-muted mt-2 mb-0">Signing in...</p>
-                                    </div>
                                     
                                     <div class="text-center mb-3">
                                         <small class="text-muted">
                                             <i class="bi bi-shield-fill-check text-success me-1"></i>
-                                            Protected by OAuth 2.0 — your password stays with Google
+                                            Protected by Firebase Authentication
                                         </small>
                                     </div>
                                     
@@ -198,101 +196,131 @@
         </div>
     </footer>
 
+    <!-- ============ SCRIPTS ============ -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
     
+    <!-- Firebase COMPAT SDK (regular scripts — NOT ES modules) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    
     <script>
+        // Init AOS
         if (typeof AOS !== 'undefined') AOS.init({ duration: 800, once: true });
+        
+        // ============ FIREBASE INIT ============
+        const firebaseConfig = {
+            apiKey: "AIzaSyDMhwa7bxclPaeW44agM8s-FRVQxkbTAuU",
+            authDomain: "indra-football-academy.firebaseapp.com",
+            projectId: "indra-football-academy",
+            storageBucket: "indra-football-academy.firebasestorage.app",
+            messagingSenderId: "794774125541",
+            appId: "1:794774125541:web:54bb5c00c61e10b3b38d0c"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const googleProvider = new firebase.auth.GoogleAuthProvider();
+        googleProvider.addScope('email');
+        googleProvider.addScope('profile');
         
         const ADMIN_EMAIL = 'some13feb@gmail.com';
         
+        // ============ GOOGLE SIGN-IN (Redirect) ============
         function doGoogleSignIn() {
-            // Show loading
-            const status = document.getElementById('authStatus');
-            if (status) { status.classList.remove('d-none'); }
-            
-            if (typeof window.signInWithGoogle === 'function') {
-                // Redirect to Google — page will reload after auth
-                window.signInWithGoogle();
-            } else {
-                // Firebase module still loading — wait and retry
-                if (status) { status.classList.add('d-none'); }
-                alert('Still loading. Please wait a moment and click again.');
-            }
+            showLoading();
+            auth.signInWithRedirect(googleProvider);
         }
         
-        // Listen for redirect result (fires when page reloads after Google auth)
-        window.addEventListener('firebase-redirect-success', function(e) {
-            handleSignInSuccess(e.detail);
-        });
-        window.addEventListener('firebase-redirect-error', function(e) {
-            const err = e.detail;
-            document.getElementById('signinContent').insertAdjacentHTML('afterbegin', 
-                '<div class="alert alert-danger mb-3">' +
-                '<i class="bi bi-exclamation-triangle me-2"></i>' +
-                '<strong>Sign-in failed:</strong> ' + (err.message || 'Unknown error') + '</div>'
-            );
+        // Handle redirect result when page reloads
+        auth.getRedirectResult().then(function(result) {
+            if (result.user) {
+                handleSignInSuccess(result.user);
+            }
+        }).catch(function(error) {
+            if (error.code) {
+                showError('Google sign-in failed: ' + error.message);
+            }
         });
         
+        // ============ EMAIL/PASSWORD SIGN-IN ============
         function doEmailSignIn(event) {
             event.preventDefault();
-            const email = document.getElementById('signInEmail').value;
-            const password = document.getElementById('signInPassword').value;
-            const errorDiv = document.getElementById('emailError');
-            errorDiv.classList.add('d-none');
+            var email = document.getElementById('signInEmail').value;
+            var password = document.getElementById('signInPassword').value;
+            hideError();
+            showLoading();
             
-            if (typeof window.signInWithEmail === 'function') {
-                window.signInWithEmail(email, password).then(function(user) {
-                    handleSignInSuccess(user);
-                }).catch(function(err) {
-                    errorDiv.classList.remove('d-none');
-                    if (err.code === 'auth/user-not-found') errorDiv.innerHTML = '<i class="bi bi-exclamation-circle me-1"></i>No account found with this email. <a href="register.html">Register here</a>';
-                    else if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') errorDiv.innerHTML = '<i class="bi bi-exclamation-circle me-1"></i>Incorrect password. Try again or use Google sign-in.';
-                    else errorDiv.innerHTML = '<i class="bi bi-exclamation-circle me-1"></i>' + err.message;
+            auth.signInWithEmailAndPassword(email, password)
+                .then(function(result) {
+                    handleSignInSuccess(result.user);
+                })
+                .catch(function(error) {
+                    hideLoading();
+                    if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+                        showError('No account found with this email/password. <a href="register.html">Register here</a>');
+                    } else if (error.code === 'auth/wrong-password') {
+                        showError('Incorrect password. Try again or use Google sign-in.');
+                    } else if (error.code === 'auth/too-many-requests') {
+                        showError('Too many failed attempts. Please wait a few minutes and try again.');
+                    } else {
+                        showError(error.message);
+                    }
                 });
+        }
+        
+        // ============ AUTH STATE LISTENER ============
+        auth.onAuthStateChanged(function(user) {
+            if (user) {
+                // Already signed in (e.g. page loaded while signed in)
+                handleSignInSuccess(user);
+            }
+        });
+        
+        // ============ SUCCESS HANDLER ============
+        function handleSignInSuccess(user) {
+            var email = user.email ? user.email.toLowerCase() : '';
+            
+            if (email === ADMIN_EMAIL) {
+                document.getElementById('signinContent').innerHTML = 
+                    '<div class="text-center py-4">' +
+                    '<i class="bi bi-shield-fill-check text-primary" style="font-size: 4rem;"></i>' +
+                    '<h4 class="fw-bold mt-3">Welcome, Admin!</h4>' +
+                    '<p class="text-muted mt-2">Redirecting to admin dashboard...</p>' +
+                    '<a href="admin.html" class="btn btn-primary btn-lg mt-3">' +
+                    '<i class="bi bi-speedometer2 me-2"></i>Go to Admin Panel</a>' +
+                    '<br><a href="../index.html" class="btn btn-outline-secondary mt-2">' +
+                    '<i class="bi bi-house me-2"></i>Go to Homepage</a></div>';
+                setTimeout(function() { window.location.href = 'admin.html'; }, 2000);
             } else {
-                errorDiv.classList.remove('d-none');
-                errorDiv.textContent = 'Email sign-in loading... Please wait a moment and try again.';
+                document.getElementById('signinContent').innerHTML = 
+                    '<div class="text-center py-4">' +
+                    '<i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>' +
+                    '<h4 class="fw-bold mt-3 text-success">Signed In Successfully!</h4>' +
+                    '<p class="text-muted mt-2">Welcome back, ' + (user.displayName || 'Player') + '!</p>' +
+                    '<a href="../index.html" class="btn btn-primary btn-lg mt-3">' +
+                    '<i class="bi bi-house me-2"></i>Go to Homepage</a></div>';
             }
         }
         
-        function handleSignInSuccess(user) {
-            const email = user.email ? user.email.toLowerCase() : '';
-            
-            if (email === ADMIN_EMAIL) {
-                // Admin detected — redirect to admin panel
-                document.getElementById('signinContent').innerHTML = `
-                    <div class="text-center py-4">
-                        <i class="bi bi-shield-fill-check text-primary" style="font-size: 4rem;"></i>
-                        <h4 class="fw-bold mt-3">Welcome, Admin!</h4>
-                        <p class="text-muted mt-2">Redirecting to admin dashboard...</p>
-                        <a href="admin.html" class="btn btn-primary btn-lg mt-3">
-                            <i class="bi bi-speedometer2 me-2"></i>Go to Admin Panel
-                        </a>
-                        <br>
-                        <a href="../index.html" class="btn btn-outline-secondary mt-2">
-                            <i class="bi bi-house me-2"></i>Go to Homepage
-                        </a>
-                    </div>`;
-                // Auto-redirect after 2 seconds
-                setTimeout(function() { window.location.href = 'admin.html'; }, 2000);
-            } else {
-                // Regular user
-                document.getElementById('signinContent').innerHTML = `
-                    <div class="text-center py-4">
-                        <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
-                        <h4 class="fw-bold mt-3 text-success">Signed In Successfully!</h4>
-                        <p class="text-muted mt-2">Welcome back, ${user.displayName || 'Player'}!</p>
-                        <a href="../index.html" class="btn btn-primary btn-lg mt-3">
-                            <i class="bi bi-house me-2"></i>Go to Homepage
-                        </a>
-                    </div>`;
-            }
+        // ============ UI HELPERS ============
+        function showError(msg) {
+            var el = document.getElementById('authError');
+            if (el) { el.innerHTML = '<i class="bi bi-exclamation-circle me-1"></i>' + msg; el.classList.remove('d-none'); }
+        }
+        function hideError() {
+            var el = document.getElementById('authError');
+            if (el) { el.classList.add('d-none'); }
+        }
+        function showLoading() {
+            var el = document.getElementById('authStatus');
+            if (el) { el.classList.remove('d-none'); }
+        }
+        function hideLoading() {
+            var el = document.getElementById('authStatus');
+            if (el) { el.classList.add('d-none'); }
         }
     </script>
-    
-    <!-- Firebase Auth (loads on Netlify/Live Server) -->
-    <script type="module" src="../js/firebase-config.js"></script>
 
     <!-- WHATSAPP FLOATING BUTTON -->
     <a href="https://wa.me/918957039841?text=Hi%20IFA!%20I%27m%20interested%20in%20joining%20the%20academy."
