@@ -827,6 +827,8 @@
         auth.onAuthStateChanged(function(user) {
             var authArea = document.querySelector('.nav-buttons');
             if (user && authArea) {
+                var ADMIN_EMAIL = 'some13feb@gmail.com';
+                var isAdmin = user.email && user.email.toLowerCase() === ADMIN_EMAIL;
                 var name = user.displayName ? user.displayName.split(' ')[0] : 'Account';
                 authArea.innerHTML = 
                     '<div class="dropdown">' +
@@ -837,6 +839,7 @@
                     '<li><span class="dropdown-item-text small text-muted"><i class="bi bi-person-fill me-1"></i>' + name + '</span></li>' +
                     '<li><span class="dropdown-item-text small text-muted"><i class="bi bi-envelope me-1"></i>' + (user.email || '') + '</span></li>' +
                     '<li><hr class="dropdown-divider"></li>' +
+                    (isAdmin ? '<li><a class="dropdown-item" href="pages/admin.html"><i class="bi bi-gear-fill me-2"></i>Modify Content</a></li>' : '') +
                     '<li><a class="dropdown-item" href="pages/profile.html"><i class="bi bi-person-badge me-2"></i>Your Profile</a></li>' +
                     '<li><a class="dropdown-item" href="pages/profile.html#reset"><i class="bi bi-key me-2"></i>Reset Password</a></li>' +
                     '<li><hr class="dropdown-divider"></li>' +

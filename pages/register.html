@@ -466,13 +466,19 @@
         });
         
         var auth = firebase.auth();
-        var db = firebase.firestore();
+        var db = null;
+        try {
+            db = firebase.firestore();
+        } catch(e) {
+            console.warn('Firestore not available — registration will still work:', e.message);
+        }
         var googleProvider = new firebase.auth.GoogleAuthProvider();
         googleProvider.addScope('email');
         googleProvider.addScope('profile');
         
         var currentUser = null;
         var selectedProgram = null;
+        var ADMIN_EMAIL = 'some13feb@gmail.com';
         
         // ============ CHECK IF ALREADY SIGNED IN ============
         auth.onAuthStateChanged(function(user) {
@@ -480,6 +486,10 @@
                 currentUser = user;
             } else {
                 // User signed out — reset page back to Step 1
+                // But NOT if we're showing the success page
+                if (!document.getElementById('stepSuccess').classList.contains('d-none')) {
+                    return; // Don't reset — user just completed registration
+                }
                 currentUser = null;
                 selectedProgram = null;
                 document.getElementById('step1').classList.remove('d-none');
@@ -508,6 +518,7 @@
                 var authArea = document.getElementById('navAuthArea');
                 if (authArea) {
                     var name = user.displayName ? user.displayName.split(' ')[0] : 'Account';
+                    var isAdmin = user.email && user.email.toLowerCase() === ADMIN_EMAIL;
                     authArea.innerHTML = 
                         '<div class="dropdown">' +
                         '<button class="btn btn-outline-light btn-sm px-3 py-1 dropdown-toggle" type="button" data-bs-toggle="dropdown">' +
@@ -516,6 +527,7 @@
                         '<li><span class="dropdown-item-text small text-muted"><i class="bi bi-person-fill me-1"></i>' + name + '</span></li>' +
                         '<li><span class="dropdown-item-text small text-muted"><i class="bi bi-envelope me-1"></i>' + (user.email || '') + '</span></li>' +
                         '<li><hr class="dropdown-divider"></li>' +
+                        (isAdmin ? '<li><a class="dropdown-item" href="admin.html"><i class="bi bi-gear-fill me-2"></i>Modify Content</a></li>' : '') +
                         '<li><a class="dropdown-item" href="profile.html"><i class="bi bi-person-badge me-2"></i>Your Profile</a></li>' +
                         '<li><a class="dropdown-item" href="profile.html#reset"><i class="bi bi-key me-2"></i>Reset Password</a></li>' +
                         '<li><hr class="dropdown-divider"></li>' +
@@ -531,6 +543,7 @@
         
         // ============ GOOGLE REGISTER ============
         function doGoogleRegister() {
+            console.log('doGoogleRegister called');
             hideStep1Error();
             var btn = document.querySelector('#step1 .social-btn');
             if (btn) {
@@ -541,10 +554,12 @@
             
             auth.signInWithPopup(googleProvider)
                 .then(function(result) {
+                    console.log('Google signup success', result.user.email);
                     currentUser = result.user;
                     advanceToStep2(result.user);
                 })
                 .catch(function(error) {
+                    console.error('Google signup error:', error.code, error.message);
                     document.getElementById('step1Loading').classList.add('d-none');
                     if (btn) {
                         btn.disabled = false;
@@ -670,7 +685,7 @@
             
             // Try to save to Firestore, but show success regardless
             try {
-                db.collection('registrations').add(regData).then(function() {
+                if (db) db.collection('registrations').add(regData).then(function() {
                     if (currentUser) {
                         db.collection('users').doc(currentUser.uid).set({
                             uid: currentUser.uid,
@@ -687,14 +702,25 @@
             
             // Always show success after short delay (don't wait for Firestore)
             setTimeout(function() {
-                showSuccess();
-            }, 800);
+                // Sign out user after registration (they can sign in fresh)
+                auth.signOut().then(function() {
+                    showSuccess();
+                }).catch(function() { showSuccess(); });
+            }, 1000);
         }
         
         // ============ SHOW SUCCESS ============
         function showSuccess() {
             document.getElementById('step3').classList.add('d-none');
             document.getElementById('stepSuccess').classList.remove('d-none');
+            
+            // Reset navbar to signed-out state
+            var authArea = document.getElementById('navAuthArea');
+            if (authArea) {
+                authArea.innerHTML = 
+                    '<a href="register.html" class="btn btn-warning btn-sm fw-semibold px-3 py-1">Register</a>' +
+                    '<a href="signin.html" class="btn btn-outline-light btn-sm px-3 py-1"><i class="bi bi-person-circle me-1"></i>Sign In</a>';
+            }
             
             // Update indicators
             document.getElementById('dot2').classList.remove('active');
