@@ -75,7 +75,7 @@
                 </ul>
                 <div class="d-flex align-items-center gap-2 flex-shrink-0">
                     <a href="register.html" class="btn btn-warning btn-sm fw-semibold px-3 py-1">Register</a>
-                    <a href="signin.html" class="btn btn-outline-light btn-sm px-3 py-1">
+                    <a href="signin.html" class="btn btn-outline-light btn-sm px-3 py-1" id="navSignInBtn">
                         <i class="bi bi-person-circle me-1"></i>Sign In
                     </a>
                 </div>
@@ -272,8 +272,14 @@
         // ============ AUTH STATE LISTENER ============
         auth.onAuthStateChanged(function(user) {
             if (user) {
-                // Already signed in (e.g. page loaded while signed in)
                 handleSignInSuccess(user);
+                // Update navbar
+                var navBtn = document.getElementById('navSignInBtn');
+                if (navBtn) {
+                    var name = user.displayName ? user.displayName.split(' ')[0] : 'Account';
+                    navBtn.innerHTML = '<i class="bi bi-person-check me-1"></i>' + name;
+                    navBtn.href = 'profile.html';
+                }
             }
         });
         
@@ -281,27 +287,18 @@
         function handleSignInSuccess(user) {
             var email = user.email ? user.email.toLowerCase() : '';
             
+            // Show brief success then redirect
+            document.getElementById('signinContent').innerHTML = 
+                '<div class="text-center py-5">' +
+                '<div class="spinner-border text-success mb-3"></div>' +
+                '<h4 class="fw-bold text-success">Signed In Successfully!</h4>' +
+                '<p class="text-muted">' + (user.displayName || '') + ' • ' + email + '</p>' +
+                '<p class="text-muted small">Redirecting...</p></div>';
+            
             if (email === ADMIN_EMAIL) {
-                document.getElementById('signinContent').innerHTML = 
-                    '<div class="text-center py-4">' +
-                    '<i class="bi bi-shield-fill-check text-primary" style="font-size: 4rem;"></i>' +
-                    '<h4 class="fw-bold mt-3">Welcome, Admin!</h4>' +
-                    '<p class="text-muted small"><i class="bi bi-envelope me-1"></i>' + email + '</p>' +
-                    '<p class="text-muted mt-2">Redirecting to admin dashboard...</p>' +
-                    '<a href="admin.html" class="btn btn-primary btn-lg mt-3">' +
-                    '<i class="bi bi-speedometer2 me-2"></i>Go to Admin Panel</a>' +
-                    '<br><a href="../index.html" class="btn btn-outline-secondary mt-2">' +
-                    '<i class="bi bi-house me-2"></i>Go to Homepage</a></div>';
-                setTimeout(function() { window.location.href = 'admin.html'; }, 2000);
+                setTimeout(function() { window.location.href = 'admin.html'; }, 1500);
             } else {
-                document.getElementById('signinContent').innerHTML = 
-                    '<div class="text-center py-4">' +
-                    '<i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>' +
-                    '<h4 class="fw-bold mt-3 text-success">Signed In Successfully!</h4>' +
-                    '<p class="text-muted mt-2">Welcome back, <strong>' + (user.displayName || 'Player') + '</strong>!</p>' +
-                    '<p class="text-muted small"><i class="bi bi-envelope me-1"></i>' + (user.email || '') + '</p>' +
-                    '<a href="../index.html" class="btn btn-primary btn-lg mt-3">' +
-                    '<i class="bi bi-house me-2"></i>Go to Homepage</a></div>';
+                setTimeout(function() { window.location.href = '../index.html'; }, 1500);
             }
         }
         

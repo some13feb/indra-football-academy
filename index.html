@@ -824,15 +824,12 @@
             var loginBtn = document.getElementById('loginBtn');
             if (user && loginBtn) {
                 var name = user.displayName ? user.displayName.split(' ')[0] : 'Account';
-                loginBtn.innerHTML = '<span class="badge bg-warning text-dark rounded-pill px-3 py-2">' +
-                    '<span class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center me-1" style="width:22px;height:22px;font-size:12px;">' + 
-                    name.charAt(0).toUpperCase() + '</span> ' + name + '</span>';
-                loginBtn.removeAttribute('onclick');
-                loginBtn.onclick = function() {
-                    if (confirm('Sign out?')) { auth.signOut(); location.reload(); }
-                };
+                loginBtn.innerHTML = '<i class="bi bi-person-check me-1"></i>' + name;
+                loginBtn.className = 'btn btn-outline-light btn-sm px-3 py-1';
+                loginBtn.onclick = function() { window.location.href = 'pages/profile.html'; };
             } else if (loginBtn) {
                 loginBtn.innerHTML = '<i class="bi bi-person-circle me-1"></i>Sign In';
+                loginBtn.className = 'btn btn-outline-light btn-sm px-3 py-1';
                 loginBtn.onclick = handleLogin;
             }
         });
