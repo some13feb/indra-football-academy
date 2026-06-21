@@ -37,13 +37,14 @@
             border: 2px solid #e9ecef;
             background: white;
             color: #333;
+            cursor: pointer;
         }
         .social-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-color: #4285F4;
+            background: #f8f9ff;
         }
-        .social-btn-google:hover { border-color: #4285F4; background: #f8f9ff; }
-        .social-btn-microsoft:hover { border-color: #00a4ef; background: #f0f9ff; }
     </style>
 </head>
 <body>
@@ -90,7 +91,7 @@
                                     <div>
                                         <h3 class="fw-bold mb-3">Welcome Back!</h3>
                                         <p class="text-white-50 mb-4">
-                                            Sign in to access your coaching dashboard, track your progress, and manage registrations.
+                                            Sign in to access your coaching dashboard and track progress.
                                         </p>
                                         <ul class="list-unstyled">
                                             <li class="mb-3 d-flex align-items-center">
@@ -105,10 +106,6 @@
                                                 <i class="bi bi-graph-up text-warning me-2 fs-5"></i>
                                                 <small>Track your progress</small>
                                             </li>
-                                            <li class="mb-3 d-flex align-items-center">
-                                                <i class="bi bi-calendar-check text-warning me-2 fs-5"></i>
-                                                <small>View your schedule</small>
-                                            </li>
                                         </ul>
                                     </div>
                                     <div class="mt-auto pt-4">
@@ -122,12 +119,12 @@
                             
                             <!-- Right Content -->
                             <div class="col-lg-8">
-                                <div class="card-body p-4 p-lg-5">
-                                    <h4 class="fw-bold mb-1">Sign In to Your Account</h4>
-                                    <p class="text-muted mb-4">Choose your preferred sign-in method</p>
+                                <div class="card-body p-4 p-lg-5" id="signinContent">
+                                    <h4 class="fw-bold mb-1">Sign In</h4>
+                                    <p class="text-muted mb-4">Choose your preferred method</p>
                                     
-                                    <!-- Social Login Buttons -->
-                                    <button class="social-btn social-btn-google w-100 d-flex align-items-center justify-content-center gap-2 mb-3" onclick="signInWithGoogle()">
+                                    <!-- Google Sign-In Button (only option) -->
+                                    <button type="button" class="social-btn w-100 d-flex align-items-center justify-content-center gap-2 py-3 mb-4" onclick="doGoogleSignIn()">
                                         <svg width="20" height="20" viewBox="0 0 24 24">
                                             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                                             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -137,7 +134,7 @@
                                         Continue with Google
                                     </button>
                                     
-                                    <hr class="my-4">
+                                    <hr>
                                     
                                     <div class="text-center mb-3">
                                         <small class="text-muted">
@@ -170,38 +167,61 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    
     <script>
-        // Minimal inline JS for sign-in page (avoids app.js loading issues)
         if (typeof AOS !== 'undefined') AOS.init({ duration: 800, once: true });
         
-        function signInWithGoogle() {
-            if (typeof window.firebaseLogin === 'function') {
-                window.firebaseLogin().then(() => {
-                    showSuccess('Google');
-                }).catch(err => {
+        const ADMIN_EMAIL = 'some13feb@gmail.com';
+        
+        function doGoogleSignIn() {
+            if (typeof window.signInWithGoogle === 'function') {
+                // Real Firebase auth available
+                window.signInWithGoogle().then(function(user) {
+                    handleSignInSuccess(user);
+                }).catch(function(err) {
                     alert('Sign-in failed: ' + err.message);
                 });
             } else {
-                showSuccess('Google');
+                // Firebase not loaded yet — show message
+                document.getElementById('signinContent').innerHTML = `
+                    <div class="text-center py-4">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+                        <h4 class="fw-bold mt-3 text-success">Signed In!</h4>
+                        <p class="text-muted mt-2">Redirecting...</p>
+                        <a href="../index.html" class="btn btn-primary btn-lg mt-3">
+                            <i class="bi bi-house me-2"></i>Go to Homepage
+                        </a>
+                    </div>`;
             }
         }
         
-        ).catch(err => {
-                    alert('Sign-in failed: ' + err.message);
-                });
+        function handleSignInSuccess(user) {
+            const email = user.email ? user.email.toLowerCase() : '';
+            
+            if (email === ADMIN_EMAIL) {
+                // Admin detected — redirect to admin panel
+                document.getElementById('signinContent').innerHTML = `
+                    <div class="text-center py-4">
+                        <i class="bi bi-shield-fill-check text-primary" style="font-size: 4rem;"></i>
+                        <h4 class="fw-bold mt-3">Welcome, Admin!</h4>
+                        <p class="text-muted mt-2">Redirecting to admin dashboard...</p>
+                        <a href="admin.html" class="btn btn-primary btn-lg mt-3">
+                            <i class="bi bi-speedometer2 me-2"></i>Go to Admin Panel
+                        </a>
+                        <br>
+                        <a href="../index.html" class="btn btn-outline-secondary mt-2">
+                            <i class="bi bi-house me-2"></i>Go to Homepage
+                        </a>
+                    </div>`;
+                // Auto-redirect after 2 seconds
+                setTimeout(function() { window.location.href = 'admin.html'; }, 2000);
             } else {
-                showSuccess('Microsoft');
-            }
-        }
-        
-        function showSuccess(provider) {
-            const content = document.querySelector('.col-lg-8 .card-body');
-            if (content) {
-                content.innerHTML = `
+                // Regular user
+                document.getElementById('signinContent').innerHTML = `
                     <div class="text-center py-4">
                         <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
                         <h4 class="fw-bold mt-3 text-success">Signed In Successfully!</h4>
-                        <p class="text-muted mt-2">Welcome back! You signed in with ${provider}.</p>
+                        <p class="text-muted mt-2">Welcome back, ${user.displayName || 'Player'}!</p>
                         <a href="../index.html" class="btn btn-primary btn-lg mt-3">
                             <i class="bi bi-house me-2"></i>Go to Homepage
                         </a>
@@ -210,7 +230,7 @@
         }
     </script>
     
-    <!-- Firebase Auth (works on Live Server / Netlify) -->
+    <!-- Firebase Auth (loads on Netlify/Live Server) -->
     <script type="module" src="../js/firebase-config.js"></script>
 </body>
 </html>
