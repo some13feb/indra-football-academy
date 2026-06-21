@@ -113,6 +113,16 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
     
+    // ============ ADMIN SETTINGS ============
+    match /settings/{docId} {
+      // Only super admin (by email) can read/write settings
+      allow read, write: if isAuthenticated() && 
+        request.auth.token.email == 'some13feb@gmail.com';
+      
+      // Sub-admins can read settings (to load their own list)
+      allow read: if isAuthenticated();
+    }
+    
     // ============ DENY ALL OTHER PATHS ============
     // This is critical — blocks access to any collection not explicitly defined
     match /{document=**} {
