@@ -297,14 +297,14 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ============ WHY CHOOSE US ============ */
 .icon-circle {
-    width: 70px;
-    height: 70px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    background: rgba(233, 30, 99, 0.1);
+    background: rgba(233, 30, 99, 0.08);
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid rgba(233, 30, 99, 0.3);
+    border: 1px solid rgba(233, 30, 99, 0.2);
 }
 
 /* ============ TESTIMONIALS ============ */
