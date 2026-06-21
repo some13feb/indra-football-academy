@@ -23,8 +23,8 @@ class ParticleSystem {
             particleCount: options.particleCount || 80,
             footballCount: options.footballCount || 5,
             geometricCount: options.geometricCount || 12,
-            particleColor: options.particleColor || 'rgba(255, 193, 7, 0.6)',
-            lineColor: options.lineColor || 'rgba(255, 193, 7, 0.1)',
+            particleColor: options.particleColor || 'rgba(247, 181, 205, 0.6)',
+            lineColor: options.lineColor || 'rgba(247, 181, 205, 0.1)',
             maxLineDistance: options.maxLineDistance || 120,
             speed: options.speed || 0.5,
             interactive: options.interactive !== false
@@ -88,7 +88,7 @@ class ParticleSystem {
     
     getRandomParticleColor() {
         const colors = [
-            'rgba(255, 193, 7, ',    // Gold
+            'rgba(247, 181, 205, ',    // Gold
             'rgba(26, 115, 232, ',   // Blue
             'rgba(255, 255, 255, ',  // White
             'rgba(40, 167, 69, ',    // Green
@@ -136,7 +136,7 @@ class ParticleSystem {
                     this.ctx.beginPath();
                     this.ctx.moveTo(p.x, p.y);
                     this.ctx.lineTo(p2.x, p2.y);
-                    this.ctx.strokeStyle = `rgba(255, 193, 7, ${opacity})`;
+                    this.ctx.strokeStyle = `rgba(247, 181, 205, ${opacity})`;
                     this.ctx.lineWidth = 0.5;
                     this.ctx.stroke();
                 }
@@ -245,7 +245,7 @@ class ParticleSystem {
     }
     
     getRandomGeoColor() {
-        const colors = ['#ffc107', '#1a73e8', '#28a745', '#e040fb', '#00bcd4'];
+        const colors = ['#F7B5CD', '#1a73e8', '#28a745', '#e040fb', '#00bcd4'];
         return colors[Math.floor(Math.random() * colors.length)];
     }
     
@@ -377,7 +377,7 @@ class WaveAnimation {
             waves: options.waves || 3,
             colors: options.colors || [
                 'rgba(26, 115, 232, 0.1)',
-                'rgba(255, 193, 7, 0.08)',
+                'rgba(247, 181, 205, 0.08)',
                 'rgba(40, 167, 69, 0.06)'
             ],
             speed: options.speed || 0.02,

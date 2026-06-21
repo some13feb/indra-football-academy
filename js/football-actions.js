@@ -113,7 +113,7 @@ class FootballActionsAnimation {
         this.ctx.restore();
     }
     
-    drawStickFigure(x, y, scale = 1, pose = 'standing', color = 'rgba(255, 193, 7, 0.9)') {
+    drawStickFigure(x, y, scale = 1, pose = 'standing', color = 'rgba(247, 181, 205, 0.9)') {
         this.ctx.save();
         this.ctx.translate(x, y);
         this.ctx.scale(scale, scale);
@@ -275,7 +275,7 @@ class FootballActionsAnimation {
         for (let i = 1; i < trail.length; i++) {
             this.ctx.lineTo(trail[i].x, trail[i].y);
         }
-        this.ctx.strokeStyle = 'rgba(255, 193, 7, 0.3)';
+        this.ctx.strokeStyle = 'rgba(247, 181, 205, 0.3)';
         this.ctx.lineWidth = 2;
         this.ctx.setLineDash([4, 4]);
         this.ctx.stroke();
@@ -375,9 +375,9 @@ class FootballActionsAnimation {
         const kickProgress = Math.min(progress * 2, 1);
         
         if (kickProgress < 0.3) {
-            this.drawStickFigure(kickerX, kickerY, 0.9, 'standing', 'rgba(255, 193, 7, 0.9)');
+            this.drawStickFigure(kickerX, kickerY, 0.9, 'standing', 'rgba(247, 181, 205, 0.9)');
         } else {
-            this.drawStickFigure(kickerX, kickerY, 0.9, 'kicking', 'rgba(255, 193, 7, 0.9)');
+            this.drawStickFigure(kickerX, kickerY, 0.9, 'kicking', 'rgba(247, 181, 205, 0.9)');
         }
         
         // Ball curves over wall
@@ -415,7 +415,7 @@ class FootballActionsAnimation {
             this.ctx.save();
             this.ctx.globalAlpha = textOpacity * 0.7;
             this.ctx.font = 'bold 32px Montserrat, sans-serif';
-            this.ctx.fillStyle = '#ffc107';
+            this.ctx.fillStyle = '#F7B5CD';
             this.ctx.textAlign = 'center';
             this.ctx.fillText('GOAL!', cx, cy - 85);
             this.ctx.restore();
@@ -443,9 +443,9 @@ class FootballActionsAnimation {
         if (progress < 0.4) {
             // Run up
             const runProgress = progress / 0.4;
-            this.drawStickFigure(kickerX - 40 + runProgress * 40, kickerY, 0.9, 'standing', 'rgba(255, 193, 7, 0.9)');
+            this.drawStickFigure(kickerX - 40 + runProgress * 40, kickerY, 0.9, 'standing', 'rgba(247, 181, 205, 0.9)');
         } else {
-            this.drawStickFigure(kickerX, kickerY, 0.9, 'kicking', 'rgba(255, 193, 7, 0.9)');
+            this.drawStickFigure(kickerX, kickerY, 0.9, 'kicking', 'rgba(247, 181, 205, 0.9)');
         }
         
         // Ball
@@ -528,9 +528,9 @@ class FootballActionsAnimation {
         const playerY = cy + 20 - jumpHeight;
         
         if (jumpProgress > 0.3) {
-            this.drawStickFigure(playerX, playerY, 1, 'heading', 'rgba(255, 193, 7, 0.9)');
+            this.drawStickFigure(playerX, playerY, 1, 'heading', 'rgba(247, 181, 205, 0.9)');
         } else {
-            this.drawStickFigure(playerX, playerY, 1, 'standing', 'rgba(255, 193, 7, 0.9)');
+            this.drawStickFigure(playerX, playerY, 1, 'standing', 'rgba(247, 181, 205, 0.9)');
         }
         
         // Ball after header (redirected toward goal)
@@ -602,14 +602,14 @@ class FootballActionsAnimation {
         
         if (kickProgress < 0.4) {
             const jumpH = Math.sin(kickProgress / 0.4 * Math.PI) * 40;
-            this.drawStickFigure(playerX, playerY - jumpH, 1, 'standing', 'rgba(255, 193, 7, 0.9)');
+            this.drawStickFigure(playerX, playerY - jumpH, 1, 'standing', 'rgba(247, 181, 205, 0.9)');
         } else {
             const airP = (kickProgress - 0.4) / 0.6;
             const jumpH = Math.sin(Math.PI * 0.7) * 40;
             this.ctx.save();
             this.ctx.translate(playerX, playerY - jumpH);
             this.ctx.rotate(-airP * Math.PI * 0.4);
-            this.drawStickFigure(0, 0, 1, 'bicycle', 'rgba(255, 193, 7, 0.9)');
+            this.drawStickFigure(0, 0, 1, 'bicycle', 'rgba(247, 181, 205, 0.9)');
             this.ctx.restore();
         }
         
