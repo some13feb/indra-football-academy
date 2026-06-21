@@ -82,6 +82,10 @@
         @media (max-width: 991px) { .gallery-grid { column-count: 2; } }
         @media (max-width: 575px) { .gallery-grid { column-count: 1; } }
     </style>
+    <style>
+        /* Fallback: show content even if AOS/JS fails */
+        [data-aos] { opacity: 1 !important; transform: none !important; }
+    </style>
 </head>
 <body>
 
