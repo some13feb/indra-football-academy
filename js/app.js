@@ -226,10 +226,28 @@ function handleLogin() {
         const modal = new bootstrap.Modal(loginModal);
         modal.show();
     } else {
-        // If modal not on this page, redirect to sign-in page
+        // On inner pages, redirect to sign-in page
         window.location.href = window.location.pathname.includes('/pages/')
             ? 'signin.html'
             : 'pages/signin.html';
+    }
+}
+
+// ============ AUTO-DETECT ADMIN ============
+// After Firebase auth loads and user is signed in, check if they're admin
+// and show an "Admin Panel" link in the navbar
+function checkIfAdmin(user) {
+    const ADMIN_EMAIL = 'some13feb@gmail.com';
+    if (user && user.email && user.email.toLowerCase() === ADMIN_EMAIL) {
+        // Add admin link to navbar
+        const navButtons = document.querySelector('.nav-buttons') || document.querySelector('.d-flex.align-items-center.gap-2');
+        if (navButtons) {
+            const adminLink = document.createElement('a');
+            adminLink.href = window.location.pathname.includes('/pages/') ? 'admin.html' : 'pages/admin.html';
+            adminLink.className = 'btn btn-outline-warning btn-sm px-2 py-1';
+            adminLink.innerHTML = '<i class="bi bi-gear-fill me-1"></i>Admin';
+            navButtons.appendChild(adminLink);
+        }
     }
 }
 

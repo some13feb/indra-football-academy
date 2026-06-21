@@ -242,9 +242,7 @@
             <button class="btn btn-primary btn-lg w-100 mb-3" onclick="adminSignIn('google')">
                 <i class="bi bi-google me-2"></i>Sign in with Google
             </button>
-            <button class="btn btn-outline-dark btn-lg w-100" onclick="adminSignIn('microsoft')">
-                <i class="bi bi-microsoft me-2"></i>Sign in with Microsoft
-            </button>
+
             <div class="mt-4">
                 <small class="text-muted">
                     <i class="bi bi-info-circle me-1"></i>
@@ -831,11 +829,18 @@
                             <h6 class="fw-bold mb-3">Admin Access</h6>
                             <p class="text-muted small">Only these email addresses can access this admin panel.</p>
                             <div class="mb-3">
-                                <label class="form-label fw-semibold">Authorized Emails</label>
-                                <textarea class="form-control" rows="3" id="adminEmails" placeholder="admin@example.com&#10;coach@example.com">admin@example.com</textarea>
-                                <small class="text-muted">One email per line</small>
+                                <label class="form-label fw-semibold">Super Admin (Root)</label>
+                                <input type="text" class="form-control bg-light" value="some13feb@gmail.com" disabled>
+                                <small class="text-muted">Cannot be changed — permanent root access</small>
                             </div>
-                            <button class="btn btn-primary btn-sm">Save Admin List</button>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Sub-Admin Emails</label>
+                                <textarea class="form-control" rows="3" id="adminEmails" placeholder="coach1@gmail.com&#10;assistant@gmail.com"></textarea>
+                                <small class="text-muted">One email per line. These users get admin access but cannot modify settings.</small>
+                            </div>
+                            <button class="btn btn-primary btn-sm" onclick="saveSubAdmins()">
+                                <i class="bi bi-save me-1"></i>Save Sub-Admin List
+                            </button>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -867,11 +872,21 @@
     
     <script>
     // ============ ADMIN CONFIGURATION ============
-    // Add YOUR email address here to grant admin access
-    const ADMIN_EMAILS = [
-        'your-email@gmail.com',    // ← CHANGE THIS to your Google email
-        'your-email@outlook.com'   // ← CHANGE THIS to your Microsoft email
+    // Super Admin (full access - cannot be removed)
+    const SUPER_ADMIN = 'some13feb@gmail.com';
+    
+    // Sub-Admins (can be added/removed by Super Admin)
+    const SUB_ADMINS = [
+        // Add sub-admin emails here, e.g.:
+        // 'coach1@gmail.com',
+        // 'assistant@gmail.com',
     ];
+    
+    // Combined list (for access check)
+    const ADMIN_EMAILS = [SUPER_ADMIN, ...SUB_ADMINS];
+    
+    // Current user role
+    let currentUserRole = null;
     
     // ============ SECTION NAVIGATION ============
     function switchSection(sectionName) {
@@ -1022,28 +1037,43 @@
     // ============ AUTH GUARD ============
     // In production, replace with Firebase Auth check
     function adminSignIn(provider) {
-        // This connects to firebase-config.js signInWithGoogle/signInWithMicrosoft
-        // For demo: simulate successful login
-        if (typeof signInWithGoogle === 'function' && provider === 'google') {
+        if (typeof signInWithGoogle === 'function') {
             signInWithGoogle().then(user => checkAdminAccess(user));
-        } else if (typeof signInWithMicrosoft === 'function' && provider === 'microsoft') {
-            signInWithMicrosoft().then(user => checkAdminAccess(user));
         } else {
-            // Demo mode — remove auth guard
+            // Demo mode — remove auth guard (for local testing without Firebase)
             document.getElementById('authGuard').classList.add('hidden');
             document.getElementById('adminName').textContent = 'Demo Admin';
+            currentUserRole = 'superadmin';
+            updateUIForRole();
         }
     }
     
     function checkAdminAccess(user) {
-        if (ADMIN_EMAILS.includes(user.email.toLowerCase())) {
+        const email = user.email.toLowerCase();
+        
+        if (email === SUPER_ADMIN) {
+            currentUserRole = 'superadmin';
             document.getElementById('authGuard').classList.add('hidden');
-            document.getElementById('adminName').textContent = user.displayName;
+            document.getElementById('adminName').textContent = user.displayName + ' (Super Admin)';
+            updateUIForRole();
+        } else if (SUB_ADMINS.includes(email)) {
+            currentUserRole = 'subadmin';
+            document.getElementById('authGuard').classList.add('hidden');
+            document.getElementById('adminName').textContent = user.displayName + ' (Admin)';
+            updateUIForRole();
         } else {
             document.getElementById('authError').classList.remove('d-none');
             document.getElementById('authError').textContent = 
-                `Access denied. "${user.email}" is not an authorized admin.`;
-            logOut(); // Sign them out
+                'Access denied. "' + user.email + '" is not an authorized admin.';
+            if (typeof logOut === 'function') logOut();
+        }
+    }
+    
+    function updateUIForRole() {
+        // Show/hide settings section based on role
+        const settingsLink = document.querySelector('[data-section="settings"]');
+        if (settingsLink && currentUserRole !== 'superadmin') {
+            settingsLink.style.display = 'none';  // Only super admin can access settings
         }
     }
     

@@ -178,6 +178,7 @@ h1, h2, h3, h4, h5, h6 {
 .hero-title {
     line-height: 1.1;
     letter-spacing: -2px;
+    font-size: clamp(2rem, 5vw + 1rem, 4.5rem);
 }
 
 .hero-image-wrapper {
@@ -374,10 +375,6 @@ footer a:hover {
 
 /* ============ RESPONSIVE ============ */
 @media (max-width: 991px) {
-    .hero-title {
-        font-size: 2.5rem;
-    }
-    
     .hero-stats {
         flex-wrap: wrap;
     }
@@ -388,11 +385,6 @@ footer a:hover {
 }
 
 @media (max-width: 575px) {
-    .hero-title {
-        font-size: 2rem;
-        letter-spacing: -1px;
-    }
-    
     .hero-subtitle {
         font-size: 1rem !important;
     }
@@ -407,6 +399,46 @@ footer a:hover {
     
     .stat-item h3 {
         font-size: 1.2rem;
+    }
+}
+
+/* ============ ADDITIONAL RESPONSIVE FIXES ============ */
+
+/* Map iframe — prevent overflow on mobile */
+#location iframe {
+    max-width: 100%;
+    width: 100%;
+    border-radius: 12px;
+}
+
+/* Schedule items — wrap on small screens */
+@media (max-width: 575px) {
+    .schedule-card .d-flex.justify-content-between {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .schedule-card .badge {
+        width: 100%;
+        text-align: center;
+    }
+    
+    /* WhatsApp button smaller on mobile */
+    .position-fixed.bottom-0.end-0 {
+        width: 50px !important;
+        height: 50px !important;
+    }
+    
+    .position-fixed.bottom-0.end-0 svg {
+        width: 26px;
+        height: 26px;
+    }
+}
+
+/* Tablet (576-991px) improvements */
+@media (min-width: 576px) and (max-width: 991px) {
+    #location .col-lg-4 {
+        margin-top: 1.5rem;
     }
 }
 
