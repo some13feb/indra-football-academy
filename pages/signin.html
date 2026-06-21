@@ -139,7 +139,29 @@
                                         Continue with Google
                                     </button>
                                     
-                                    <hr>
+                                    <div class="text-center my-3">
+                                        <span class="text-muted small">— OR sign in with email —</span>
+                                    </div>
+                                    
+                                    <!-- Email/Password Form -->
+                                    <form id="emailSignInForm" onsubmit="doEmailSignIn(event)">
+                                        <div class="mb-3">
+                                            <input type="email" class="form-control form-control-lg" id="signInEmail" 
+                                                placeholder="Email address" required style="border-radius: 10px;">
+                                        </div>
+                                        <div class="mb-3">
+                                            <input type="password" class="form-control form-control-lg" id="signInPassword" 
+                                                placeholder="Password" required minlength="6" style="border-radius: 10px;">
+                                        </div>
+                                        <button type="submit" class="btn btn-dark w-100 py-3 fw-semibold" style="border-radius: 10px;">
+                                            <i class="bi bi-envelope me-2"></i>Sign In with Email
+                                        </button>
+                                    </form>
+                                    
+                                    <!-- Error Message -->
+                                    <div id="emailError" class="alert alert-danger mt-3 d-none small"></div>
+                                    
+                                    <hr class="my-3">
                                     
                                     <!-- Loading/Error state -->
                                     <div id="authStatus" class="text-center d-none mb-3">
@@ -213,6 +235,28 @@
                             <i class="bi bi-house me-2"></i>Go to Homepage
                         </a>
                     </div>`;
+            }
+        }
+        
+        function doEmailSignIn(event) {
+            event.preventDefault();
+            const email = document.getElementById('signInEmail').value;
+            const password = document.getElementById('signInPassword').value;
+            const errorDiv = document.getElementById('emailError');
+            errorDiv.classList.add('d-none');
+            
+            if (typeof window.signInWithEmail === 'function') {
+                window.signInWithEmail(email, password).then(function(user) {
+                    handleSignInSuccess(user);
+                }).catch(function(err) {
+                    errorDiv.classList.remove('d-none');
+                    if (err.code === 'auth/user-not-found') errorDiv.innerHTML = '<i class="bi bi-exclamation-circle me-1"></i>No account found with this email. <a href="register.html">Register here</a>';
+                    else if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') errorDiv.innerHTML = '<i class="bi bi-exclamation-circle me-1"></i>Incorrect password. Try again or use Google sign-in.';
+                    else errorDiv.innerHTML = '<i class="bi bi-exclamation-circle me-1"></i>' + err.message;
+                });
+            } else {
+                errorDiv.classList.remove('d-none');
+                errorDiv.textContent = 'Email sign-in loading... Please wait a moment and try again.';
             }
         }
         

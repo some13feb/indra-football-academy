@@ -1,49 +1,30 @@
 /* ============================================================
-   ProStrike Football Academy — Firebase Configuration
-   Handles: Authentication (Google/Microsoft), Firestore, Storage
-   
-   SETUP INSTRUCTIONS:
-   1. Go to https://console.firebase.google.com
-   2. Create a new project called "prostrike-academy"
-   3. Go to Project Settings → General → Your apps → Web app
-   4. Copy the config values below
-   5. Enable Authentication → Google & Microsoft providers
-   6. Enable Firestore Database
-   7. Enable Storage
+   Indra Football Academy — Firebase Configuration
+   Handles: Google Auth, Email/Password Auth, Firestore, Storage
    ============================================================ */
 
-// Firebase SDK Imports (ES Modules)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
     getAuth,
     signInWithPopup,
     signInWithRedirect,
     getRedirectResult,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    sendEmailVerification,
     signOut,
     onAuthStateChanged,
-    GoogleAuthProvider,
+    GoogleAuthProvider
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { 
-    getFirestore, 
-    collection, 
-    doc, 
-    setDoc, 
-    getDoc, 
-    getDocs, 
-    addDoc, 
-    query, 
-    where, 
-    orderBy, 
-    serverTimestamp 
+import {
+    getFirestore,
+    doc,
+    setDoc,
+    getDoc,
+    serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { 
-    getStorage, 
-    ref, 
-    uploadBytes, 
-    getDownloadURL 
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
-// ============ FIREBASE CONFIGURATION ============
+// ============ FIREBASE CONFIG ============
 const firebaseConfig = {
     apiKey: "AIzaSyDMhwa7bxclPaeW44agM8s-FRVQxkbTAuU",
     authDomain: "indra-football-academy.firebaseapp.com",
@@ -53,64 +34,135 @@ const firebaseConfig = {
     appId: "1:794774125541:web:54bb5c00c61e10b3b38d0c"
 };
 
-// ============ INITIALIZE FIREBASE ============
+// ============ INITIALIZE ============
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const storage = getStorage(app);
 
-// ============ AUTH PROVIDERS ============
+// Google Provider
 const googleProvider = new GoogleAuthProvider();
 googleProvider.addScope('email');
 googleProvider.addScope('profile');
 
-// Microsoft provider removed — using Google only
-
-// ============ AUTHENTICATION FUNCTIONS ============
-
-/**
- * Sign in with Google
- * @returns {Promise<Object>} User object
- */
+// ============ GOOGLE SIGN-IN ============
 async function signInWithGoogle() {
     try {
         const result = await signInWithPopup(auth, googleProvider);
         const user = result.user;
-        
-        // Save user to Firestore (create profile if new)
         await saveUserProfile(user);
-        
-        showAuthToast(`Welcome, ${user.displayName}!`, 'success');
-        updateUIForLoggedInUser(user);
-        
         return user;
     } catch (error) {
-        // If popup blocked or fails, try redirect method
         if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
-            console.log('Popup failed, trying redirect...');
+            // Fallback to redirect
             await signInWithRedirect(auth, googleProvider);
-            return null; // page will reload after redirect
-        } else {
-            console.error('Google sign-in error:', error);
-            showAuthToast('Sign-in failed. Please try again.', 'danger');
-            throw error;
+            return null;
         }
+        throw error;
     }
 }
 
-// Handle redirect result (when page reloads after redirect sign-in)
+// ============ EMAIL/PASSWORD SIGN-UP ============
+async function signUpWithEmail(email, password) {
+    try {
+        const result = await createUserWithEmailAndPassword(auth, email, password);
+        const user = result.user;
+        // Send verification email
+        await sendEmailVerification(user);
+        await saveUserProfile(user);
+        return user;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// ============ EMAIL/PASSWORD SIGN-IN ============
+async function signInWithEmail(email, password) {
+    try {
+        const result = await signInWithEmailAndPassword(auth, email, password);
+        return result.user;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// ============ SIGN OUT ============
+async function logOut() {
+    await signOut(auth);
+}
+
+// ============ SAVE USER PROFILE ============
+async function saveUserProfile(user) {
+    try {
+        const userRef = doc(db, 'users', user.uid);
+        const userSnap = await getDoc(userRef);
+        
+        if (!userSnap.exists()) {
+            await setDoc(userRef, {
+                uid: user.uid,
+                displayName: user.displayName || '',
+                email: user.email,
+                photoURL: user.photoURL || '',
+                provider: user.providerData[0]?.providerId || 'unknown',
+                createdAt: serverTimestamp(),
+                lastLogin: serverTimestamp(),
+                role: 'student'
+            });
+        } else {
+            await setDoc(userRef, { lastLogin: serverTimestamp() }, { merge: true });
+        }
+    } catch (e) {
+        console.error('Error saving profile:', e);
+    }
+}
+
+// ============ AUTH STATE LISTENER ============
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        console.log('Signed in:', user.email);
+        updateUIForLoggedInUser(user);
+        if (typeof checkIfAdmin === 'function') {
+            checkIfAdmin(user);
+        }
+    } else {
+        console.log('Signed out');
+        updateUIForLoggedOutUser();
+    }
+});
+
+// ============ REDIRECT RESULT HANDLER ============
 getRedirectResult(auth).then((result) => {
     if (result && result.user) {
         saveUserProfile(result.user);
         updateUIForLoggedInUser(result.user);
     }
 }).catch((error) => {
-    console.error('Redirect sign-in error:', error);
+    if (error.code) console.error('Redirect error:', error.code);
 });
 
-logOut,
-    registerForProgram,
-    getUserRegistrations,
-    getGalleryImages,
-    uploadImage
-};
+// ============ UI HELPERS ============
+function updateUIForLoggedInUser(user) {
+    const loginBtn = document.getElementById('loginBtn');
+    if (loginBtn) {
+        loginBtn.innerHTML = `<i class="bi bi-person-check me-1"></i>${user.displayName?.split(' ')[0] || 'Account'}`;
+        loginBtn.onclick = logOut;
+    }
+}
+
+function updateUIForLoggedOutUser() {
+    const loginBtn = document.getElementById('loginBtn');
+    if (loginBtn) {
+        loginBtn.innerHTML = '<i class="bi bi-person-circle me-1"></i>Sign In';
+    }
+}
+
+function showAuthToast(msg, type) {
+    console.log(`[${type}] ${msg}`);
+}
+
+// ============ EXPOSE GLOBALLY ============
+window.signInWithGoogle = signInWithGoogle;
+window.signUpWithEmail = signUpWithEmail;
+window.signInWithEmail = signInWithEmail;
+window.firebaseLogin = signInWithGoogle;
+window.logOut = logOut;
+window.firebaseAuth = auth;

@@ -214,11 +214,31 @@
                                             </svg>
                                             Continue with Google
                                         </button>
+
+                                        <div class="text-center my-3">
+                                            <span class="text-muted small">— OR register with email —</span>
+                                        </div>
+                                        
+                                        <!-- Email/Password Registration -->
+                                        <form id="emailRegForm" onsubmit="doEmailRegister(event)">
+                                            <div class="mb-2">
+                                                <input type="email" class="form-control" id="regEmail" 
+                                                    placeholder="Email address" required>
+                                            </div>
+                                            <div class="mb-2">
+                                                <input type="password" class="form-control" id="regPassword" 
+                                                    placeholder="Create password (min 6 chars)" required minlength="6">
+                                            </div>
+                                            <button type="submit" class="btn btn-dark w-100 fw-semibold">
+                                                <i class="bi bi-envelope me-2"></i>Register with Email
+                                            </button>
+                                        </form>
+                                        <div id="regEmailError" class="alert alert-danger mt-2 d-none small"></div>
                                         
                                         <div class="text-center">
                                             <small class="text-muted">
                                                 <i class="bi bi-shield-fill-check text-success me-1"></i>
-                                                We never see or store your password — Google handles authentication securely.
+                                                Your data is encrypted and secure.
                                             </small>
                                         </div>
                                     </div>
@@ -443,6 +463,27 @@
             goToStep(2);
             document.getElementById('step1dot').classList.add('completed');
             document.getElementById('step1dot').innerHTML = '<i class="bi bi-check"></i>';
+        }
+        
+        function doEmailRegister(event) {
+            event.preventDefault();
+            const email = document.getElementById('regEmail').value;
+            const password=[REDACTED_PASSWORD]
+            const errorDiv = document.getElementById('regEmailError');
+            errorDiv.classList.add('d-none');
+            
+            if (typeof window.signUpWithEmail === 'function') {
+                window.signUpWithEmail(email, password).then(function(user) {
+                    advanceToStep2();
+                }).catch(function(err) {
+                    errorDiv.classList.remove('d-none');
+                    if (err.code === 'auth/email-already-in-use') errorDiv.innerHTML = 'This email is already registered. <a href="signin.html">Sign in instead</a>';
+                    else if (err.code === 'auth/weak-password') errorDiv.textContent = 'Password must be at least 6 characters.';
+                    else errorDiv.textContent = err.message;
+                });
+            } else {
+                advanceToStep2();
+            }
         }
     </script>
     
