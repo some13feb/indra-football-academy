@@ -89,7 +89,7 @@ class ParticleSystem {
     getRandomParticleColor() {
         const colors = [
             'rgba(247, 181, 205, ',    // Gold
-            'rgba(26, 115, 232, ',   // Blue
+            'rgba(233, 30, 99, ',   // Blue
             'rgba(255, 255, 255, ',  // White
             'rgba(40, 167, 69, ',    // Green
         ];
@@ -245,7 +245,7 @@ class ParticleSystem {
     }
     
     getRandomGeoColor() {
-        const colors = ['#F7B5CD', '#1a73e8', '#28a745', '#e040fb', '#00bcd4'];
+        const colors = ['#F7B5CD', '#E91E63', '#28a745', '#e040fb', '#00bcd4'];
         return colors[Math.floor(Math.random() * colors.length)];
     }
     
@@ -376,7 +376,7 @@ class WaveAnimation {
         this.config = {
             waves: options.waves || 3,
             colors: options.colors || [
-                'rgba(26, 115, 232, 0.1)',
+                'rgba(233, 30, 99, 0.1)',
                 'rgba(247, 181, 205, 0.08)',
                 'rgba(40, 167, 69, 0.06)'
             ],

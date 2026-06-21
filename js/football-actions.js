@@ -493,7 +493,7 @@ class FootballActionsAnimation {
             this.ctx.save();
             this.ctx.globalAlpha = textOpacity * 0.7;
             this.ctx.font = 'bold 30px Montserrat, sans-serif';
-            this.ctx.fillStyle = '#1a73e8';
+            this.ctx.fillStyle = '#E91E63';
             this.ctx.textAlign = 'center';
             this.ctx.fillText('PENALTY!', cx, cy - 80);
             this.ctx.restore();

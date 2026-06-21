@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
                     <div class="row g-0">
-                        <div class="col-lg-4 d-none d-lg-block" style="background: linear-gradient(135deg, #1a73e8, #0d47a1); padding: 2.5rem;">
+                        <div class="col-lg-4 d-none d-lg-block" style="background: linear-gradient(135deg, #E91E63, #C2185B); padding: 2.5rem;">
                             <div class="d-flex flex-column justify-content-center h-100 text-white">
                                 <h4 class="fw-bold mb-3">Welcome Back!</h4>
                                 <p class="text-white-50 mb-4">Sign in to access your coaching dashboard, track progress, and manage registrations.</p>
