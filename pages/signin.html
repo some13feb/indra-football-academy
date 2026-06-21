@@ -141,6 +141,12 @@
                                     
                                     <hr>
                                     
+                                    <!-- Loading/Error state -->
+                                    <div id="authStatus" class="text-center d-none mb-3">
+                                        <div class="spinner-border text-primary" role="status"></div>
+                                        <p class="text-muted mt-2 mb-0">Signing in...</p>
+                                    </div>
+                                    
                                     <div class="text-center mb-3">
                                         <small class="text-muted">
                                             <i class="bi bi-shield-fill-check text-success me-1"></i>
@@ -179,12 +185,22 @@
         const ADMIN_EMAIL = 'some13feb@gmail.com';
         
         function doGoogleSignIn() {
+            // Show loading
+            const status = document.getElementById('authStatus');
+            if (status) { status.classList.remove('d-none'); }
+            
             if (typeof window.signInWithGoogle === 'function') {
                 // Real Firebase auth available
                 window.signInWithGoogle().then(function(user) {
                     handleSignInSuccess(user);
                 }).catch(function(err) {
-                    alert('Sign-in failed: ' + err.message);
+                    if (status) { status.classList.add('d-none'); }
+                    document.getElementById('signinContent').insertAdjacentHTML('afterbegin', 
+                        '<div class="alert alert-danger mb-3">' +
+                        '<i class="bi bi-exclamation-triangle me-2"></i>' +
+                        '<strong>Sign-in failed:</strong> ' + err.message + 
+                        '<br><small class="mt-1 d-block">Make sure popups are allowed and try again.</small></div>'
+                    );
                 });
             } else {
                 // Firebase not loaded yet — show message
