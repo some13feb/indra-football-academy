@@ -33,17 +33,17 @@ service cloud.firestore {
     
     // ============ USER PROFILES ============
     match /users/{userId} {
-      // Users can read their own profile
-      allow read: if isOwner(userId);
+      // Users can read their own profile; admins can read any
+      allow read: if isOwner(userId) || isAdmin();
       
       // Users can create their own profile (on first login)
-      allow create: if isOwner(userId) && 
-        request.resource.data.keys().hasAll(['uid', 'email', 'displayName']) &&
+      allow create: if isOwner(userId) &&
+        request.resource.data.keys().hasAny(['uid', 'email']) &&
         request.resource.data.uid == userId;
       
-      // Users can update their own profile (limited fields)
+      // Users can update their own profile (cannot change uid or role)
       allow update: if isOwner(userId) &&
-        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['uid', 'role', 'createdAt']);
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['uid', 'role']);
       
       // Only admins can delete user profiles
       allow delete: if isAdmin();
@@ -71,15 +71,15 @@ service cloud.firestore {
     match /registrations/{registrationId} {
       // Users can read their own registrations
       allow read: if isAuthenticated() && 
-        resource.data.userId == request.auth.uid;
+        resource.data.uid == request.auth.uid;
       
       // Admins can read all registrations
       allow read: if isAdmin();
       
       // Authenticated users can create a registration
       allow create: if isAuthenticated() &&
-        request.resource.data.userId == request.auth.uid &&
-        request.resource.data.keys().hasAll(['userId', 'programId', 'status']);
+        request.resource.data.uid == request.auth.uid &&
+        request.resource.data.keys().hasAll(['uid', 'program', 'status']);
       
       // Users cannot edit their registration (admins only)
       allow update: if isAdmin();

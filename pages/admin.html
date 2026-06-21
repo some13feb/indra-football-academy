@@ -2,6 +2,9 @@
 <html lang="en" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Indra Football Academy</title>
     
@@ -869,6 +872,20 @@
 
     <!-- ============ SCRIPTS ============ -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Firebase COMPAT SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script>
+        firebase.initializeApp({
+            apiKey: "AIzaSyDMhwa7bxclPaeW44agM8s-FRVQxkbTAuU",
+            authDomain: "indra-football-academy.firebaseapp.com",
+            projectId: "indra-football-academy",
+            storageBucket: "indra-football-academy.firebasestorage.app",
+            messagingSenderId: "794774125541",
+            appId: "1:794774125541:web:54bb5c00c61e10b3b38d0c"
+        });
+    </script>
     
     <script>
     // ============ ADMIN CONFIGURATION ============
@@ -1035,16 +1052,19 @@
     }
     
     // ============ AUTH GUARD ============
-    // In production, replace with Firebase Auth check
     function adminSignIn(provider) {
-        if (typeof signInWithGoogle === 'function') {
-            signInWithGoogle().then(user => checkAdminAccess(user));
+        if (typeof firebase !== 'undefined' && firebase.auth) {
+            var googleProvider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithPopup(googleProvider).then(function(result) {
+                checkAdminAccess(result.user);
+            }).catch(function(err) {
+                document.getElementById('authError').classList.remove('d-none');
+                document.getElementById('authError').textContent = 'Sign-in failed: ' + err.message;
+            });
         } else {
-            // Demo mode — remove auth guard (for local testing without Firebase)
-            document.getElementById('authGuard').classList.add('hidden');
-            document.getElementById('adminName').textContent = 'Demo Admin';
-            currentUserRole = 'superadmin';
-            updateUIForRole();
+            // Firebase not loaded — show error (NO demo mode)
+            document.getElementById('authError').classList.remove('d-none');
+            document.getElementById('authError').textContent = 'Authentication system unavailable. Please refresh the page.';
         }
     }
     
@@ -1078,7 +1098,7 @@
     }
     
     function adminSignOut() {
-        if (typeof logOut === 'function') logOut();
+        firebase.auth().signOut();
         document.getElementById('authGuard').classList.remove('hidden');
     }
     
@@ -1095,6 +1115,5 @@
     </script>
     
     <!-- Firebase (uncomment when configured) -->
-    <!-- <script type="module" src="../js/firebase-config.js"></script> -->
 </body>
 </html>
