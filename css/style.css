@@ -729,41 +729,48 @@ button {
 /* Buttons: vibrant hot pink */
 .btn-warning {
     --bs-btn-color: #fff;
-    --bs-btn-bg: #E91E63;
-    --bs-btn-border-color: #E91E63;
-    --bs-btn-hover-color: #fff;
-    --bs-btn-hover-bg: #C2185B;
-    --bs-btn-hover-border-color: #C2185B;
-    --bs-btn-active-color: #fff;
-    --bs-btn-active-bg: #AD1457;
-    --bs-btn-active-border-color: #AD1457;
-    --bs-btn-disabled-color: #fff;
-    --bs-btn-disabled-bg: #F48FB1;
-    --bs-btn-disabled-border-color: #F48FB1;
-    background-color: #E91E63 !important;
-    border-color: #E91E63 !important;
-    color: #fff !important;
-}
-
-.btn-warning:hover {
-    background-color: #C2185B !important;
-    border-color: #C2185B !important;
-    color: #fff !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(233, 30, 99, 0.5) !important;
-}
-
-.btn-outline-warning {
-    --bs-btn-color: #E91E63;
-    --bs-btn-border-color: #E91E63;
+    --bs-btn-bg: transparent;
+    --bs-btn-border-color: #fff;
     --bs-btn-hover-color: #fff;
     --bs-btn-hover-bg: #E91E63;
     --bs-btn-hover-border-color: #E91E63;
-    border-color: #E91E63 !important;
-    color: #E91E63 !important;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #C2185B;
+    --bs-btn-active-border-color: #C2185B;
+    --bs-btn-disabled-color: rgba(255,255,255,0.5);
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: rgba(255,255,255,0.5);
+    background-color: transparent !important;
+    border: 2px solid #fff !important;
+    color: #fff !important;
+    border-radius: 12px;
 }
 
-.btn-outline-warning:hover {
+.btn-warning:hover,
+.btn-warning:focus,
+.btn-warning:active {
+    background-color: #E91E63 !important;
+    border-color: #E91E63 !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(233, 30, 99, 0.5) !important;
+}
+
+.btn-outline-warning {
+    --bs-btn-color: #fff;
+    --bs-btn-border-color: #fff;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #E91E63;
+    --bs-btn-hover-border-color: #E91E63;
+    background-color: transparent !important;
+    border: 2px solid #fff !important;
+    color: #fff !important;
+    border-radius: 12px;
+}
+
+.btn-outline-warning:hover,
+.btn-outline-warning:focus,
+.btn-outline-warning:active {
     background-color: #E91E63 !important;
     border-color: #E91E63 !important;
     color: #fff !important;
