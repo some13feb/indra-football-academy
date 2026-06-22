@@ -1261,13 +1261,53 @@
                     '<td>' + (p.ageGroup || '') + '</td>' +
                     '<td>' + (p.sessions || '-') + '/week</td>' +
                     '<td><span class="badge" style="background:#FF69B4; color:#fff;">Active</span></td>' +
-                    '<td><button class="btn btn-sm btn-outline-danger" onclick="deleteProgram(\'' + doc.id + '\')"><i class="bi bi-trash"></i></button></td>' +
+                    '<td>' +
+                        '<button class="btn btn-sm btn-outline-dark me-1" onclick="editProgram(\'' + doc.id + '\', \'' + (p.name||'').replace(/'/g,'') + '\', \'' + (p.ageGroup||'') + '\', \'' + (p.sessions||'') + '\', \'' + (p.capacity||'') + '\', \'' + (p.description||'').replace(/'/g,'') + '\')"><i class="bi bi-pencil"></i></button>' +
+                        '<button class="btn btn-sm btn-outline-danger" onclick="deleteProgram(\'' + doc.id + '\')"><i class="bi bi-trash"></i></button>' +
+                    '</td>' +
                 '</tr>';
             });
             container.innerHTML = html;
         });
     }
     
+    
+    function editProgram(id, name, ageGroup, sessions, capacity, description) {
+        // Show the program form pre-filled
+        showAddProgramForm();
+        document.getElementById('progName').value = name || '';
+        document.getElementById('progAge').value = ageGroup || '';
+        document.getElementById('progSessions').value = sessions || '';
+        if (document.getElementById('progCapacity')) document.getElementById('progCapacity').value = capacity || '';
+        if (document.getElementById('progDesc')) document.getElementById('progDesc').value = description || '';
+        
+        // Change form to update mode
+        var form = document.getElementById('programEditForm');
+        if (form) {
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                var programData = {
+                    name: document.getElementById('progName').value,
+                    ageGroup: document.getElementById('progAge').value,
+                    sessions: document.getElementById('progSessions').value,
+                    capacity: document.getElementById('progCapacity') ? document.getElementById('progCapacity').value : '',
+                    description: document.getElementById('progDesc') ? document.getElementById('progDesc').value : '',
+                    updatedAt: new Date().toISOString()
+                };
+                
+                db.collection('programs').doc(id).update(programData).then(function() {
+                    alert('✅ Program updated!');
+                    hideProgramForm();
+                    loadPrograms();
+                    // Reset form to add mode
+                    form.onsubmit = null;
+                }).catch(function(err) {
+                    alert('Error: ' + err.message);
+                });
+            };
+        }
+    }
+
     function deleteProgram(id) {
         if (confirm('Delete this program?')) {
             db.collection('programs').doc(id).delete().then(function() {
