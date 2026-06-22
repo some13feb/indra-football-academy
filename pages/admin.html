@@ -338,6 +338,7 @@
         }
 </style>
 
+    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
 </head>
 <body>
 
@@ -1205,33 +1206,62 @@
         const category = document.getElementById('uploadCategory').value;
         const caption = document.getElementById('uploadCaption').value;
         
-        // In production: call Firebase uploadImage() from firebase-config.js
+        // Real Firebase Storage upload
         // For now, show success feedback
-        // Upload to Firebase Storage
-        if (typeof firebase === 'undefined' || !firebase.storage) {
-            alert('Firebase Storage not configured. Add Storage in Firebase Console.');
-            return;
+        // Upload to Cloudinary (free, no card needed)
+        var CLOUDINARY_CLOUD_NAME = localStorage.getItem('cloudinary_cloud') || '';
+        var CLOUDINARY_PRESET = localStorage.getItem('cloudinary_preset') || '';
+        
+        if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_PRESET) {
+            CLOUDINARY_CLOUD_NAME = prompt('Enter your Cloudinary Cloud Name:\n(Get it from cloudinary.com/console)');
+            CLOUDINARY_PRESET = prompt('Enter your Cloudinary Upload Preset:\n(Create one in Settings → Upload → Unsigned)');
+            if (CLOUDINARY_CLOUD_NAME && CLOUDINARY_PRESET) {
+                localStorage.setItem('cloudinary_cloud', CLOUDINARY_CLOUD_NAME);
+                localStorage.setItem('cloudinary_preset', CLOUDINARY_PRESET);
+            } else {
+                alert('Cloudinary setup required. See Settings → Gallery Setup.');
+                return;
+            }
         }
-        var storageRef = firebase.storage().ref();
+        
         var uploaded = 0;
         var total = selectedFiles.length;
+        
         Array.from(selectedFiles).forEach(function(file) {
-            var fileName = Date.now() + '_' + file.name;
-            var fileRef = storageRef.child('gallery/' + category + '/' + fileName);
-            fileRef.put(file).then(function(snapshot) {
-                return snapshot.ref.getDownloadURL();
-            }).then(function(downloadURL) {
-                db.collection('gallery').add({
-                    url: downloadURL, category: category, fileName: fileName,
-                    uploadedAt: new Date().toISOString(),
-                    uploadedBy: firebase.auth().currentUser.email
-                });
-                uploaded++;
-                if (uploaded === total) {
-                    alert('✅ ' + total + ' image(s) uploaded to "' + category + '"!');
-                    document.getElementById('galleryUpload').value = '';
+            var formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', CLOUDINARY_PRESET);
+            formData.append('folder', 'ifa_gallery/' + category);
+            
+            fetch('https://api.cloudinary.com/v1_1/' + CLOUDINARY_CLOUD_NAME + '/image/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.secure_url) {
+                    // Save URL to Firestore
+                    db.collection('gallery').add({
+                        url: data.secure_url,
+                        category: category,
+                        publicId: data.public_id,
+                        uploadedAt: new Date().toISOString(),
+                        uploadedBy: firebase.auth().currentUser.email
+                    });
+                    
+                    uploaded++;
+                    if (uploaded === total) {
+                        alert('✅ ' + total + ' image(s) uploaded to "' + category + '"!');
+                        document.getElementById('galleryUpload').value = '';
+                        loadGalleryImages();
+                    }
+                } else {
+                    alert('Upload failed: ' + (data.error?.message || 'Unknown error'));
                 }
-            }).catch(function(err) { alert('Upload error: ' + err.message); });
+            })
+            .catch(function(err) {
+                alert('Upload error: ' + err.message);
+            });
         });
         
         // Reset
@@ -1253,9 +1283,64 @@
     
     document.getElementById('programEditForm')?.addEventListener('submit', function(e) {
         e.preventDefault();
-        alert('✅ Program saved! In production, this writes to Firestore.');
-        hideProgramForm();
+        
+        var programData = {
+            name: document.getElementById('progName').value,
+            ageGroup: document.getElementById('progAge').value,
+            sessions: document.getElementById('progSessions').value,
+            capacity: document.getElementById('progCapacity').value,
+            description: document.getElementById('progDesc').value,
+            updatedAt: new Date().toISOString()
+        };
+        
+        if (typeof db !== 'undefined') {
+            db.collection('programs').add(programData).then(function() {
+                alert('✅ Program saved successfully!');
+                hideProgramForm();
+                loadPrograms();
+            }).catch(function(err) {
+                alert('Error saving program: ' + err.message);
+            });
+        } else {
+            alert('Database not connected. Check Firebase configuration.');
+        }
     });
+    
+    function loadPrograms() {
+        if (typeof db === 'undefined') return;
+        var container = document.getElementById('programsList');
+        if (!container) return;
+        
+        db.collection('programs').get().then(function(snapshot) {
+            if (snapshot.empty) {
+                container.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No programs added yet.</td></tr>';
+                return;
+            }
+            var html = '';
+            snapshot.forEach(function(doc) {
+                var p = doc.data();
+                html += '<tr>' +
+                    '<td>' + (p.name || '') + '</td>' +
+                    '<td>' + (p.ageGroup || '') + '</td>' +
+                    '<td>' + (p.sessions || '') + '/week</td>' +
+                    '<td><span class="badge" style="background:#FF69B4; color:#fff;">Active</span></td>' +
+                    '<td><button class="btn btn-sm btn-outline-danger" onclick="deleteProgram(\'' + doc.id + '\')"><i class="bi bi-trash"></i></button></td>' +
+                '</tr>';
+            });
+            container.innerHTML = html;
+        });
+    }
+    
+    function deleteProgram(id) {
+        if (confirm('Delete this program?')) {
+            db.collection('programs').doc(id).delete().then(function() {
+                loadPrograms();
+            });
+        }
+    }
+    
+    // Load programs on page open
+    setTimeout(loadPrograms, 2500);
     
     // ============ SCHEDULE ============
     function showAddSessionForm() {
@@ -1265,6 +1350,59 @@
     function hideSessionForm() {
         document.getElementById('sessionForm').classList.add('d-none');
     }
+    
+    function saveSchedule() {
+        var day = document.querySelector('#sessionForm select')?.value || '';
+        var time = document.querySelector('#sessionForm input[type="text"]')?.value || '';
+        var session = document.querySelector('#sessionForm input[placeholder*="session"]')?.value || '';
+        
+        if (typeof db !== 'undefined') {
+            db.collection('schedule').add({
+                day: day,
+                time: time,
+                session: session,
+                updatedAt: new Date().toISOString()
+            }).then(function() {
+                alert('✅ Schedule updated!');
+                hideSessionForm();
+                loadSchedule();
+            }).catch(function(err) {
+                alert('Error: ' + err.message);
+            });
+        } else {
+            alert('Database not connected.');
+        }
+    }
+    
+    function loadSchedule() {
+        if (typeof db === 'undefined') return;
+        db.collection('schedule').get().then(function(snapshot) {
+            var container = document.getElementById('scheduleList');
+            if (!container) return;
+            if (snapshot.empty) {
+                container.innerHTML = '<p class="text-muted">No schedule entries yet.</p>';
+                return;
+            }
+            var html = '<ul class="list-group">';
+            snapshot.forEach(function(doc) {
+                var s = doc.data();
+                html += '<li class="list-group-item d-flex justify-content-between align-items-center">' +
+                    '<span><strong>' + (s.day || '') + '</strong> — ' + (s.time || '') + ' — ' + (s.session || '') + '</span>' +
+                    '<button class="btn btn-sm btn-outline-danger" onclick="deleteScheduleItem(\'' + doc.id + '\')"><i class="bi bi-trash"></i></button>' +
+                '</li>';
+            });
+            html += '</ul>';
+            container.innerHTML = html;
+        });
+    }
+    
+    function deleteScheduleItem(id) {
+        if (confirm('Delete this schedule entry?')) {
+            db.collection('schedule').doc(id).delete().then(function() { loadSchedule(); });
+        }
+    }
+    
+    setTimeout(loadSchedule, 2500);
     
     // ============ AUTH GUARD ============
     function adminSignIn(provider) {
@@ -1705,6 +1843,48 @@
     
     // Load testimonials on page open
     setTimeout(loadTestimonials, 2500);
+
+
+    // ============ GALLERY IMAGE LOADING ============
+    function loadGalleryImages() {
+        if (typeof db === 'undefined') return;
+        var container = document.getElementById('galleryGrid');
+        if (!container) return;
+        
+        db.collection('gallery').orderBy('uploadedAt', 'desc').get().then(function(snapshot) {
+            if (snapshot.empty) {
+                container.innerHTML = '<p class="text-muted text-center py-4">No photos uploaded yet. Upload your first image above.</p>';
+                return;
+            }
+            var html = '<div class="row g-3">';
+            snapshot.forEach(function(doc) {
+                var data = doc.data();
+                html += '<div class="col-6 col-md-4 col-lg-3">' +
+                    '<div class="position-relative border rounded-3 overflow-hidden">' +
+                        '<img src="' + data.url + '" class="img-fluid" style="height:150px; width:100%; object-fit:cover;">' +
+                        '<span class="badge bg-dark position-absolute top-0 start-0 m-2 small">' + (data.category || '') + '</span>' +
+                        '<button class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2" onclick="deleteGalleryImage(\'' + doc.id + '\')">' +
+                            '<i class="bi bi-trash"></i>' +
+                        '</button>' +
+                    '</div>' +
+                '</div>';
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }).catch(function(err) {
+            console.error('Gallery load error:', err);
+        });
+    }
+    
+    function deleteGalleryImage(docId) {
+        if (!confirm('Delete this image?')) return;
+        db.collection('gallery').doc(docId).delete().then(function() {
+            loadGalleryImages();
+        });
+    }
+    
+    // Load gallery on page open
+    setTimeout(loadGalleryImages, 2000);
 
 </script>
     
