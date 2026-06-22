@@ -43,7 +43,7 @@
         }
         
         .admin-sidebar .brand {
-            color: #E91E63;
+            color: #FF69B4;
             font-family: var(--font-heading);
             font-weight: 800;
             font-size: 1.2rem;
@@ -66,7 +66,7 @@
         
         .admin-sidebar .nav-link.active {
             background: rgba(233, 30, 99, 0.3);
-            border-left: 3px solid #E91E63;
+            border-left: 3px solid #FF69B4;
         }
         
         .admin-sidebar .nav-link i {
@@ -144,7 +144,7 @@
         
         .upload-zone:hover,
         .upload-zone.drag-over {
-            border-color: #E91E63;
+            border-color: #FF69B4;
             background: rgba(233, 30, 99, 0.03);
         }
         
@@ -244,10 +244,10 @@
     <!-- Inter Miami CF Color Override -->
     <style>
         :root {
-            --bs-primary: #F5B6CD !important;
-            --bs-success: #F5B6CD !important;
-            --bs-danger: #F5B6CD !important;
-            --bs-warning: #F5B6CD !important;
+            --bs-primary: #FF69B4 !important;
+            --bs-success: #FF69B4 !important;
+            --bs-danger: #FF69B4 !important;
+            --bs-warning: #FF69B4 !important;
             --bs-dark: #231F20 !important;
             --bs-light: #FFFFFF !important;
         }
@@ -257,15 +257,15 @@
             color: #FFFFFF !important;
         }
         .btn-dark:hover {
-            background-color: #F5B6CD !important;
-            border-color: #F5B6CD !important;
+            background-color: #FF69B4 !important;
+            border-color: #FF69B4 !important;
             color: #000000 !important;
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(245, 182, 205, 0.4);
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
         }
         .btn-outline-light:hover {
-            background-color: #F5B6CD !important;
-            border-color: #F5B6CD !important;
+            background-color: #FF69B4 !important;
+            border-color: #FF69B4 !important;
             color: #000000 !important;
         }
         .btn-primary, .btn-success, .btn-danger, .btn-warning {
@@ -274,8 +274,8 @@
             color: #FFFFFF !important;
         }
         .btn-primary:hover, .btn-success:hover, .btn-danger:hover, .btn-warning:hover {
-            background-color: #F5B6CD !important;
-            border-color: #F5B6CD !important;
+            background-color: #FF69B4 !important;
+            border-color: #FF69B4 !important;
             color: #000000 !important;
         }
         .btn-outline-dark {
@@ -290,36 +290,36 @@
             background-color: #231F20 !important;
         }
         .text-primary, .text-success, .text-danger, .text-warning {
-            color: #F5B6CD !important;
+            color: #FF69B4 !important;
         }
         .text-dark {
             color: #231F20 !important;
         }
         .badge.bg-primary, .badge.bg-success, .badge.bg-danger, .badge.bg-warning {
-            background-color: #F5B6CD !important;
+            background-color: #FF69B4 !important;
             color: #000000 !important;
         }
         footer {
             background: #000000 !important;
         }
         .nav-link:hover, .nav-link.active {
-            color: #F5B6CD !important;
+            color: #FF69B4 !important;
         }
         .brand-text {
-            color: #F5B6CD !important;
+            color: #FF69B4 !important;
         }
         #mainNavbar.scrolled {
             background: rgba(35, 31, 32, 0.97) !important;
         }
         .form-control:focus {
-            border-color: #F5B6CD !important;
-            box-shadow: 0 0 0 0.2rem rgba(245, 182, 205, 0.25) !important;
+            border-color: #FF69B4 !important;
+            box-shadow: 0 0 0 0.2rem rgba(255, 105, 180, 0.25) !important;
         }
         a {
             color: #231F20;
         }
         a:hover {
-            color: #F5B6CD;
+            color: #FF69B4;
         }
     </style>
 
@@ -864,46 +864,17 @@
                 </div>
                 
                 <!-- Coaching Team (4 slots) -->
-                <h6 class="fw-bold mb-3"><i class="bi bi-people-fill text-dark me-2"></i>Coaching Team (4 coaches)</h6>
-                <div class="row g-3">
-                    <div class="col-md-6 col-lg-3" id="coach1Card">
-                        <div class="border rounded-3 p-3 text-center">
-                            <img id="coach1Preview" src="" alt="" class="rounded-circle mb-2 d-none" style="width:80px; height:80px; object-fit:cover;">
-                            <i id="coach1Placeholder" class="bi bi-person-circle d-block mb-2" style="font-size:3rem; color:#ccc;"></i>
-                            <input type="text" class="form-control form-control-sm mb-1" id="coach1Name" placeholder="Coach Name">
-                            <input type="text" class="form-control form-control-sm mb-1" id="coach1Role" placeholder="Role (e.g. Youth Coach)">
-                            <input type="text" class="form-control form-control-sm mb-1" id="coach1Cert" placeholder="Certification">
-                            <input type="file" class="form-control form-control-sm" accept="image/*" onchange="previewPhoto('coach1')">
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-3" id="coach2Card">
-                        <div class="border rounded-3 p-3 text-center">
-                            <img id="coach2Preview" src="" alt="" class="rounded-circle mb-2 d-none" style="width:80px; height:80px; object-fit:cover;">
-                            <i id="coach2Placeholder" class="bi bi-person-circle d-block mb-2" style="font-size:3rem; color:#ccc;"></i>
-                            <input type="text" class="form-control form-control-sm mb-1" id="coach2Name" placeholder="Coach Name">
-                            <input type="text" class="form-control form-control-sm mb-1" id="coach2Role" placeholder="Role">
-                            <input type="text" class="form-control form-control-sm mb-1" id="coach2Cert" placeholder="Certification">
-                            <input type="file" class="form-control form-control-sm" accept="image/*" onchange="previewPhoto('coach2')">
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-3" id="coach3Card">
-                        <div class="border rounded-3 p-3 text-center">
-                            <img id="coach3Preview" src="" alt="" class="rounded-circle mb-2 d-none" style="width:80px; height:80px; object-fit:cover;">
-                            <i id="coach3Placeholder" class="bi bi-person-circle d-block mb-2" style="font-size:3rem; color:#ccc;"></i>
-                            <input type="text" class="form-control form-control-sm mb-1" id="coach3Name" placeholder="Coach Name">
-                            <input type="text" class="form-control form-control-sm mb-1" id="coach3Role" placeholder="Role">
-                            <input type="text" class="form-control form-control-sm mb-1" id="coach3Cert" placeholder="Certification">
-                            <input type="file" class="form-control form-control-sm" accept="image/*" onchange="previewPhoto('coach3')">
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-3" id="coach4Card">
-                        <div class="border rounded-3 p-3 text-center">
-                            <img id="coach4Preview" src="" alt="" class="rounded-circle mb-2 d-none" style="width:80px; height:80px; object-fit:cover;">
-                            <i id="coach4Placeholder" class="bi bi-person-circle d-block mb-2" style="font-size:3rem; color:#ccc;"></i>
-                            <input type="text" class="form-control form-control-sm mb-1" id="coach4Name" placeholder="Coach Name">
-                            <input type="text" class="form-control form-control-sm mb-1" id="coach4Role" placeholder="Role">
-                            <input type="text" class="form-control form-control-sm mb-1" id="coach4Cert" placeholder="Certification">
-                            <input type="file" class="form-control form-control-sm" accept="image/*" onchange="previewPhoto('coach4')">
+                <h6 class="fw-bold mb-3"><i class="bi bi-people-fill text-dark me-2"></i>Coaching Team 
+                    <button class="btn btn-sm btn-outline-dark ms-2" onclick="addCoachSlot()">
+                        <i class="bi bi-plus-circle me-1"></i>Add Coach
+                    </button>
+                </h6>
+                <div class="row g-3" id="coachesContainer">
+                    <!-- Coaches loaded dynamically -->
+                    <div class="col-md-6 col-lg-3">
+                        <div class="border rounded-3 p-3 text-center border-dashed" style="border-style: dashed !important; min-height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <i class="bi bi-person-plus d-block mb-2" style="font-size:3rem; color:#ccc;"></i>
+                            <p class="text-muted small mb-0">Click "Add Coach" to add team members</p>
                         </div>
                     </div>
                 </div>
@@ -968,13 +939,19 @@
                                 <ul class="mb-0 mt-1">
                                     <li>✅ Upload/manage gallery photos</li>
                                     <li>✅ Add/edit programs</li>
+                                    <li>✅ Edit schedule</li>
+                                    <li>✅ Edit About page content</li>
                                     <li>✅ Manage registrations</li>
-                                    <li>✅ Update schedule</li>
                                     <li>✅ Read/reply to messages</li>
-                                    <li>❌ Cannot access Settings</li>
+                                    <li>✅ Reset passwords for other users</li>
+                                    <li>✅ Manage coaching team</li>
                                     <li>❌ Cannot remove Super Admin</li>
                                     <li>❌ Cannot reset Super Admin password</li>
                                 </ul>
+                                <div class="alert alert-warning small mt-2 mb-0">
+                                    <strong>⚡ Elevated Sub-Admin:</strong> <code>Ankit1234567890singh@gmail.com</code>
+                                    <br>Can also: Add/remove other sub-admins, access User Management.
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1034,12 +1011,14 @@
 
     // Sub-Admins (loaded from Firestore)
     let SUB_ADMINS = [];
+    // Elevated sub-admin (can add other sub-admins)
+    const ELEVATED_ADMINS = ['Ankit1234567890singh@gmail.com'];
 
     // Combined list (for access check) — updated after loading from Firestore
     let ADMIN_EMAILS = [SUPER_ADMIN];
 
     function refreshAdminEmails() {
-        ADMIN_EMAILS = [SUPER_ADMIN, ...SUB_ADMINS];
+        ADMIN_EMAILS = [SUPER_ADMIN, ...ELEVATED_ADMINS, ...SUB_ADMINS];
     }
 
     // Current user role
@@ -1217,6 +1196,11 @@
             document.getElementById('authGuard').classList.add('hidden');
             document.getElementById('adminName').textContent = user.displayName + ' (Super Admin)';
             updateUIForRole();
+        } else if (ELEVATED_ADMINS.includes(email)) {
+            // Elevated sub-admin — full admin access
+            document.querySelectorAll('[data-admin-only]').forEach(el => el.style.display = 'block');
+            showSection('dashboard');
+            document.getElementById('userRole').textContent = '⚡ Elevated Admin';
         } else if (SUB_ADMINS.includes(email)) {
             currentUserRole = 'subadmin';
             document.getElementById('authGuard').classList.add('hidden');
@@ -1387,7 +1371,150 @@
 
     // Load sub-admins from Firestore on page load
     loadSubAdmins();
-    </script>
+    
+    // ============ DYNAMIC COACH MANAGEMENT ============
+    var coachCount = 0;
+    
+    function addCoachSlot() {
+        coachCount++;
+        var container = document.getElementById('coachesContainer');
+        
+        // Remove the placeholder if it's the first coach
+        var placeholder = container.querySelector('.border-dashed');
+        if (placeholder) placeholder.parentElement.remove();
+        
+        var coachDiv = document.createElement('div');
+        coachDiv.className = 'col-md-6 col-lg-3';
+        coachDiv.id = 'coachSlot' + coachCount;
+        coachDiv.innerHTML = 
+            '<div class="border rounded-3 p-3 text-center position-relative">' +
+                '<button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 m-1" onclick="removeCoachSlot(' + coachCount + ')" title="Remove">' +
+                    '<i class="bi bi-x-lg"></i>' +
+                '</button>' +
+                '<img id="coachImg' + coachCount + '" src="" alt="" class="rounded-circle mb-2 d-none" style="width:80px; height:80px; object-fit:cover;">' +
+                '<i id="coachIcon' + coachCount + '" class="bi bi-person-circle d-block mb-2" style="font-size:3rem; color:#ccc;"></i>' +
+                '<input type="text" class="form-control form-control-sm mb-1" id="coachName' + coachCount + '" placeholder="Coach Name">' +
+                '<input type="text" class="form-control form-control-sm mb-1" id="coachRole' + coachCount + '" placeholder="Role (e.g. Youth Coach)">' +
+                '<input type="text" class="form-control form-control-sm mb-1" id="coachCert' + coachCount + '" placeholder="Certification">' +
+                '<input type="file" class="form-control form-control-sm" accept="image/*" onchange="previewCoachPhoto(' + coachCount + ', this)">' +
+            '</div>';
+        
+        container.appendChild(coachDiv);
+    }
+    
+    function removeCoachSlot(id) {
+        if (confirm('Remove this coach slot?')) {
+            var slot = document.getElementById('coachSlot' + id);
+            if (slot) slot.remove();
+            
+            // If no coaches left, show placeholder
+            var container = document.getElementById('coachesContainer');
+            if (container.children.length === 0) {
+                container.innerHTML = 
+                    '<div class="col-md-6 col-lg-3">' +
+                        '<div class="border rounded-3 p-3 text-center" style="border-style: dashed !important; min-height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center;">' +
+                            '<i class="bi bi-person-plus d-block mb-2" style="font-size:3rem; color:#ccc;"></i>' +
+                            '<p class="text-muted small mb-0">Click "Add Coach" to add team members</p>' +
+                        '</div>' +
+                    '</div>';
+            }
+        }
+    }
+    
+    function previewCoachPhoto(id, input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = document.getElementById('coachImg' + id);
+                var icon = document.getElementById('coachIcon' + id);
+                img.src = e.target.result;
+                img.classList.remove('d-none');
+                if (icon) icon.classList.add('d-none');
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    
+    // Override saveTeamData to handle dynamic coaches
+    function saveTeamData() {
+        var coaches = [];
+        var container = document.getElementById('coachesContainer');
+        var slots = container.querySelectorAll('[id^="coachSlot"]');
+        
+        slots.forEach(function(slot) {
+            var id = slot.id.replace('coachSlot', '');
+            var name = document.getElementById('coachName' + id);
+            var role = document.getElementById('coachRole' + id);
+            var cert = document.getElementById('coachCert' + id);
+            
+            if (name && name.value.trim()) {
+                coaches.push({
+                    name: name.value.trim(),
+                    role: role ? role.value.trim() : '',
+                    cert: cert ? cert.value.trim() : ''
+                });
+            }
+        });
+        
+        var headCoachData = {
+            name: document.getElementById('headCoachName').value,
+            title: document.getElementById('headCoachTitle').value,
+            bio: document.getElementById('headCoachBio').value,
+            cert: document.getElementById('headCoachCert').value
+        };
+        
+        if (typeof db !== 'undefined') {
+            db.collection('settings').doc('team').set({
+                headCoach: headCoachData,
+                coaches: coaches,
+                updatedAt: new Date().toISOString()
+            }).then(function() {
+                var msg = document.getElementById('teamMsg');
+                msg.className = 'alert alert-success mt-3 small';
+                msg.textContent = '✅ Team details saved successfully!';
+                msg.classList.remove('d-none');
+                setTimeout(function() { msg.classList.add('d-none'); }, 3000);
+            }).catch(function(err) {
+                alert('Error saving: ' + err.message);
+            });
+        } else {
+            alert('Database not connected. Please check your Firebase configuration.');
+        }
+    }
+    
+    // Load coaches from Firestore on page load
+    function loadTeamData() {
+        if (typeof db !== 'undefined') {
+            db.collection('settings').doc('team').get().then(function(doc) {
+                if (doc.exists) {
+                    var data = doc.data();
+                    // Load head coach
+                    if (data.headCoach) {
+                        document.getElementById('headCoachName').value = data.headCoach.name || '';
+                        document.getElementById('headCoachTitle').value = data.headCoach.title || '';
+                        document.getElementById('headCoachBio').value = data.headCoach.bio || '';
+                        document.getElementById('headCoachCert').value = data.headCoach.cert || '';
+                    }
+                    // Load coaches dynamically
+                    if (data.coaches && data.coaches.length > 0) {
+                        data.coaches.forEach(function(coach) {
+                            addCoachSlot();
+                            document.getElementById('coachName' + coachCount).value = coach.name || '';
+                            document.getElementById('coachRole' + coachCount).value = coach.role || '';
+                            document.getElementById('coachCert' + coachCount).value = coach.cert || '';
+                        });
+                    }
+                }
+            }).catch(function(err) {
+                console.error('Error loading team:', err);
+            });
+        }
+    }
+    
+    // Call loadTeamData when page loads (after auth check)
+    setTimeout(loadTeamData, 2000);
+
+</script>
     
     <!-- Firebase (uncomment when configured) -->
 </body>

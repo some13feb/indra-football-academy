@@ -5,26 +5,26 @@
 
 /* ============ CSS CUSTOM PROPERTIES (THEME) ============ */
 :root {
-    --primary: #F5B6CD;
-    --primary-dark: #F5B6CD;
-    --secondary: #F5B6CD;
-    --success: #F5B6CD;
-    --warning: #F5B6CD;
-    --danger: #F5B6CD;
+    --primary: #FF69B4;
+    --primary-dark: #FF69B4;
+    --secondary: #FF69B4;
+    --success: #FF69B4;
+    --warning: #FF69B4;
+    --danger: #FF69B4;
     --dark: #231F20;
     --darker: #231F20;
     --light: #f8f9fa;
-    --purple: #F5B6CD;
+    --purple: #FF69B4;
     
-    --gradient-primary: linear-gradient(135deg, #F5B6CD 0%, #F5B6CD 100%);
+    --gradient-primary: linear-gradient(135deg, #FF69B4 0%, #FF69B4 100%);
     --gradient-hero: linear-gradient(135deg, #231F20 0%, #231F20 50%, #231F20 100%);
-    --gradient-success: linear-gradient(135deg, #F5B6CD 0%, #F5B6CD 100%);
-    --gradient-warning: linear-gradient(135deg, #F5B6CD 0%, #F5B6CD 100%);
+    --gradient-success: linear-gradient(135deg, #FF69B4 0%, #FF69B4 100%);
+    --gradient-warning: linear-gradient(135deg, #FF69B4 0%, #FF69B4 100%);
     
     --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
     --shadow-md: 0 4px 20px rgba(0,0,0,0.12);
     --shadow-lg: 0 8px 40px rgba(0,0,0,0.16);
-    --shadow-glow: 0 0 30px rgba(245, 182, 205, 0.3);
+    --shadow-glow: 0 0 30px rgba(255, 105, 180, 0.3);
     
     --radius-sm: 8px;
     --radius-md: 12px;
@@ -79,21 +79,21 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ============ UTILITY CLASSES ============ */
 .text-gradient {
-    background: linear-gradient(135deg, #F5B6CD, #F5B6CD);
+    background: linear-gradient(135deg, #FF69B4, #FF69B4);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .text-gradient-green {
-    background: linear-gradient(135deg, #F5B6CD, #F5B6CD);
+    background: linear-gradient(135deg, #FF69B4, #FF69B4);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .text-gradient-purple {
-    background: linear-gradient(135deg, #F5B6CD, #F5B6CD);
+    background: linear-gradient(135deg, #FF69B4, #FF69B4);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -300,11 +300,11 @@ h1, h2, h3, h4, h5, h6 {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background: rgba(245, 182, 205, 0.15);
+    background: rgba(255, 105, 180, 0.15);
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba(245, 182, 205, 0.3);
+    border: 1px solid rgba(255, 105, 180, 0.3);
 }
 
 /* ============ TESTIMONIALS ============ */
@@ -339,10 +339,10 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ============ BADGE CUSTOM COLORS ============ */
 .bg-purple-subtle {
-    background-color: rgba(245, 182, 205, 0.15) !important;
+    background-color: rgba(255, 105, 180, 0.15) !important;
 }
 .text-purple {
-    color: #F5B6CD !important;
+    color: #FF69B4 !important;
 }
 
 /* ============ FOOTER ============ */
@@ -377,26 +377,26 @@ footer a:hover {
 
 .btn-warning:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(245, 182, 205, 0.4);
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(245, 182, 205, 0.4);
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
 }
 
 .btn-outline-light:hover {
     transform: translateY(-2px);
-    background-color: #F5B6CD !important;
-    border-color: #F5B6CD !important;
+    background-color: #FF69B4 !important;
+    border-color: #FF69B4 !important;
     color: #fff !important;
-    box-shadow: 0 4px 15px rgba(245, 182, 205, 0.4);
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
 }
 
 .btn-outline-light:focus,
 .btn-outline-light:active {
-    background-color: #F5B6CD !important;
-    border-color: #F5B6CD !important;
+    background-color: #FF69B4 !important;
+    border-color: #FF69B4 !important;
     color: #fff !important;
 }
 
@@ -567,7 +567,7 @@ button {
 
 /* ============ SELECTION ============ */
 ::selection {
-    background: rgba(245, 182, 205, 0.3);
+    background: rgba(255, 105, 180, 0.3);
     color: inherit;
 }
 
@@ -671,7 +671,7 @@ button {
 
 /* CTA section — animated gradient */
 #cta {
-    background: linear-gradient(135deg, #F5B6CD 0%, #F5B6CD 40%, #1565c0 70%, #F5B6CD 100%) !important;
+    background: linear-gradient(135deg, #FF69B4 0%, #FF69B4 40%, #1565c0 70%, #FF69B4 100%) !important;
     background-size: 200% 200% !important;
     animation: gradientMove 5s ease infinite;
     position: relative;
@@ -703,7 +703,7 @@ button {
 .program-card:hover {
     transform: translateY(-12px) scale(1.02) !important;
     box-shadow: 0 25px 60px rgba(0,0,0,0.12) !important;
-    border-color: rgba(245, 182, 205, 0.3) !important;
+    border-color: rgba(255, 105, 180, 0.3) !important;
 }
 
 /* Glowing icon circles in Why Us */
@@ -734,7 +734,7 @@ button {
 }
 
 .bg-warning {
-    background-color: #F5B6CD !important;
+    background-color: #FF69B4 !important;
 }
 
 /* Buttons: vibrant hot pink */
@@ -743,11 +743,11 @@ button {
     --bs-btn-bg: transparent;
     --bs-btn-border-color: #fff;
     --bs-btn-hover-color: #fff;
-    --bs-btn-hover-bg: #F5B6CD;
-    --bs-btn-hover-border-color: #F5B6CD;
+    --bs-btn-hover-bg: #FF69B4;
+    --bs-btn-hover-border-color: #FF69B4;
     --bs-btn-active-color: #fff;
-    --bs-btn-active-bg: #F5B6CD;
-    --bs-btn-active-border-color: #F5B6CD;
+    --bs-btn-active-bg: #FF69B4;
+    --bs-btn-active-border-color: #FF69B4;
     --bs-btn-disabled-color: rgba(255,255,255,0.5);
     --bs-btn-disabled-bg: transparent;
     --bs-btn-disabled-border-color: rgba(255,255,255,0.5);
@@ -760,8 +760,8 @@ button {
 .btn-warning:hover,
 .btn-warning:focus,
 .btn-warning:active {
-    background-color: #F5B6CD !important;
-    border-color: #F5B6CD !important;
+    background-color: #FF69B4 !important;
+    border-color: #FF69B4 !important;
     color: #fff !important;
     transform: translateY(-2px);
     box-shadow: 0 4px 20px rgba(233, 30, 99, 0.5) !important;
@@ -771,8 +771,8 @@ button {
     --bs-btn-color: #fff;
     --bs-btn-border-color: #fff;
     --bs-btn-hover-color: #fff;
-    --bs-btn-hover-bg: #F5B6CD;
-    --bs-btn-hover-border-color: #F5B6CD;
+    --bs-btn-hover-bg: #FF69B4;
+    --bs-btn-hover-border-color: #FF69B4;
     background-color: transparent !important;
     border: 2px solid #fff !important;
     color: #fff !important;
@@ -782,116 +782,116 @@ button {
 .btn-outline-warning:hover,
 .btn-outline-warning:focus,
 .btn-outline-warning:active {
-    background-color: #F5B6CD !important;
-    border-color: #F5B6CD !important;
+    background-color: #FF69B4 !important;
+    border-color: #FF69B4 !important;
     color: #fff !important;
 }
 
 .border-warning {
-    border-color: #F5B6CD !important;
+    border-color: #FF69B4 !important;
 }
 
 /* Nav link active/hover - hot pink */
 .nav-link:hover,
 .nav-link.active {
-    color: #F5B6CD !important;
+    color: #FF69B4 !important;
 }
 
 .nav-link::after {
-    background: #F5B6CD !important;
+    background: #FF69B4 !important;
 }
 
 /* Card hover glow */
 .hover-lift:hover {
-    box-shadow: 0 8px 40px rgba(245, 182, 205, 0.3) !important;
+    box-shadow: 0 8px 40px rgba(255, 105, 180, 0.3) !important;
 }
 
 /* Footer links hover */
 footer a:hover {
-    color: #F5B6CD !important;
+    color: #FF69B4 !important;
 }
 
 .social-icons a:hover {
-    color: #F5B6CD !important;
+    color: #FF69B4 !important;
 }
 
 
 /* ============ GLOBAL PINK — OVERRIDE ALL BLUES ============ */
 /* Primary button → pink */
 .btn-primary {
-    --bs-btn-bg: #F5B6CD;
-    --bs-btn-border-color: #F5B6CD;
-    --bs-btn-hover-bg: #F5B6CD;
-    --bs-btn-hover-border-color: #F5B6CD;
-    --bs-btn-active-bg: #F5B6CD;
-    --bs-btn-active-border-color: #F5B6CD;
-    background-color: #F5B6CD !important;
-    border-color: #F5B6CD !important;
+    --bs-btn-bg: #FF69B4;
+    --bs-btn-border-color: #FF69B4;
+    --bs-btn-hover-bg: #FF69B4;
+    --bs-btn-hover-border-color: #FF69B4;
+    --bs-btn-active-bg: #FF69B4;
+    --bs-btn-active-border-color: #FF69B4;
+    background-color: #FF69B4 !important;
+    border-color: #FF69B4 !important;
 }
 
 .btn-primary:hover {
-    background-color: #F5B6CD !important;
-    border-color: #F5B6CD !important;
-    box-shadow: 0 4px 15px rgba(245, 182, 205, 0.4) !important;
+    background-color: #FF69B4 !important;
+    border-color: #FF69B4 !important;
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4) !important;
 }
 
 .btn-outline-primary {
-    --bs-btn-color: #F5B6CD;
-    --bs-btn-border-color: #F5B6CD;
-    --bs-btn-hover-bg: #F5B6CD;
-    --bs-btn-hover-border-color: #F5B6CD;
-    color: #F5B6CD !important;
-    border-color: #F5B6CD !important;
+    --bs-btn-color: #FF69B4;
+    --bs-btn-border-color: #FF69B4;
+    --bs-btn-hover-bg: #FF69B4;
+    --bs-btn-hover-border-color: #FF69B4;
+    color: #FF69B4 !important;
+    border-color: #FF69B4 !important;
 }
 
 .btn-outline-primary:hover {
-    background-color: #F5B6CD !important;
-    border-color: #F5B6CD !important;
+    background-color: #FF69B4 !important;
+    border-color: #FF69B4 !important;
     color: #fff !important;
 }
 
 /* Links → pink */
 a {
-    color: #F5B6CD;
+    color: #FF69B4;
 }
 
 a:hover {
-    color: #F5B6CD;
+    color: #FF69B4;
 }
 
 /* Focus ring → pink */
 .form-control:focus,
 .form-select:focus {
-    border-color: #F5B6CD;
+    border-color: #FF69B4;
     box-shadow: 0 0 0 0.25rem rgba(233, 30, 99, 0.25);
 }
 
 /* Active step indicator */
 .text-primary {
-    color: #F5B6CD !important;
+    color: #FF69B4 !important;
 }
 
 .bg-primary {
-    background-color: #F5B6CD !important;
+    background-color: #FF69B4 !important;
 }
 
 .border-primary {
-    border-color: #F5B6CD !important;
+    border-color: #FF69B4 !important;
 }
 
 /* Progress bars */
 .progress-bar {
-    background-color: #F5B6CD;
+    background-color: #FF69B4;
 }
 
 /* Badge */
 .badge.bg-primary {
-    background-color: #F5B6CD !important;
+    background-color: #FF69B4 !important;
 }
 
 /* Selection/highlight */
 ::selection {
-    background: rgba(245, 182, 205, 0.3);
+    background: rgba(255, 105, 180, 0.3);
     color: #231F20;
 }
 
@@ -904,10 +904,10 @@ a:hover {
 .btn.btn-outline-light:focus,
 .btn.btn-outline-light:active,
 .btn.btn-outline-light.active {
-    background-color: #F5B6CD !important;
-    border-color: #F5B6CD !important;
+    background-color: #FF69B4 !important;
+    border-color: #FF69B4 !important;
     color: #fff !important;
-    box-shadow: 0 4px 15px rgba(245, 182, 205, 0.4) !important;
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4) !important;
 }
 
 /* All warning buttons (Register, Start Training) → white outline, pink on hover */
@@ -922,8 +922,8 @@ a:hover {
 .btn.btn-warning:focus,
 .btn.btn-warning:active,
 .btn.btn-warning.active {
-    background-color: #F5B6CD !important;
-    border-color: #F5B6CD !important;
+    background-color: #FF69B4 !important;
+    border-color: #FF69B4 !important;
     color: #fff !important;
     box-shadow: 0 4px 20px rgba(233, 30, 99, 0.5) !important;
 }
@@ -932,18 +932,18 @@ a:hover {
 .btn.btn-primary:hover,
 .btn.btn-primary:focus,
 .btn.btn-primary:active {
-    background-color: #F5B6CD !important;
-    border-color: #F5B6CD !important;
+    background-color: #FF69B4 !important;
+    border-color: #FF69B4 !important;
     color: #fff !important;
-    box-shadow: 0 4px 15px rgba(245, 182, 205, 0.4) !important;
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4) !important;
 }
 
 /* Nav links → pink on hover/active */
 #mainNavbar .nav-link:hover,
 #mainNavbar .nav-link.active {
-    color: #F5B6CD !important;
+    color: #FF69B4 !important;
 }
 
 #mainNavbar .nav-link::after {
-    background: #F5B6CD !important;
+    background: #FF69B4 !important;
 }
