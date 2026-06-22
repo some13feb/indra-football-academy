@@ -1194,7 +1194,7 @@
                     uploaded++;
                     if (uploaded === total) {
                         alert('✅ ' + total + ' image(s) uploaded to "' + category + '"!');
-                        document.getElementById('galleryUpload').value = '';
+                        var fileEl = document.getElementById('fileInput'); if(fileEl) fileEl.value = '';
                         loadGalleryImages();
                     }
                 } else {
