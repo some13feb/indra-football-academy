@@ -1281,8 +1281,7 @@
         }
     }
     
-    // Load programs on page open
-    setTimeout(loadPrograms, 2500);
+    
     
     // ============ SCHEDULE ============
     function showAddSessionForm() {
@@ -1344,7 +1343,7 @@
         }
     }
     
-    setTimeout(loadSchedule, 2500);
+    
     
     // ============ AUTH GUARD ============
     function adminSignIn(provider) {
@@ -1363,6 +1362,20 @@
         }
     }
     
+    
+    // Load all data AFTER successful admin sign-in
+    function loadAllAdminData() {
+        console.log('Loading admin data from Firestore...');
+        setTimeout(function() {
+            if (typeof loadPrograms === 'function') loadPrograms();
+            if (typeof loadGalleryImages === 'function') loadGalleryImages();
+            if (typeof loadSchedule === 'function') loadSchedule();
+            if (typeof loadTestimonials === 'function') loadTestimonials();
+            if (typeof loadTeamData === 'function') loadTeamData();
+            if (typeof loadSubAdmins === 'function') loadSubAdmins();
+        }, 1000);
+    }
+
     function checkAdminAccess(user) {
         const email = user.email.toLowerCase();
         
@@ -1371,13 +1384,16 @@
             document.getElementById('authGuard').classList.add('hidden');
             document.getElementById('adminName').textContent = user.displayName + ' (Super Admin)';
             updateUIForRole();
+            loadAllAdminData();
         } else if (ELEVATED_ADMINS.includes(email)) {
             // Elevated sub-admin — full admin access
             document.querySelectorAll('[data-admin-only]').forEach(el => el.style.display = 'block');
             showSection('dashboard');
             document.getElementById('userRole').textContent = '⚡ Elevated Admin';
+            loadAllAdminData();
         } else if (SUB_ADMINS.includes(email)) {
             currentUserRole = 'subadmin';
+            loadAllAdminData();
             document.getElementById('authGuard').classList.add('hidden');
             document.getElementById('adminName').textContent = user.displayName + ' (Admin)';
             updateUIForRole();
@@ -1687,7 +1703,7 @@
     }
     
     // Call loadTeamData when page loads (after auth check)
-    setTimeout(loadTeamData, 2000);
+    
 
 
     // ============ TESTIMONIALS MANAGEMENT ============
@@ -1784,7 +1800,7 @@
     }
     
     // Load testimonials on page open
-    setTimeout(loadTestimonials, 2500);
+    
 
 
     // ============ GALLERY IMAGE LOADING ============
@@ -1826,7 +1842,7 @@
     }
     
     // Load gallery on page open
-    setTimeout(loadGalleryImages, 2000);
+    
 
 </script>
     
