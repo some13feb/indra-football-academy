@@ -33,7 +33,7 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.1);
         }
         .auth-sidebar {
-            background: linear-gradient(135deg, #FF69B4, #FF69B4);
+            background: linear-gradient(135deg, #231F20, #1a1a1a);
             padding: 2.5rem;
             display: flex;
             flex-direction: column;
@@ -52,7 +52,7 @@
         .social-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border-color: #4285F4;
+            border-color: #FF69B4;
             background: #f8f9ff;
         }
         .step-indicator {
@@ -263,7 +263,7 @@
                                 <div class="auth-sidebar h-100 text-white">
                                     <div>
                                         <h3 class="fw-bold mb-3">Join IFA</h3>
-                                        <p class="text-white-50 mb-4">
+                                        <p class="text-white mb-4" style="opacity: 0.85;">
                                             Start your football journey today. Registration is quick and secure.
                                         </p>
                                         <ul class="list-unstyled">
@@ -286,7 +286,7 @@
                                         </ul>
                                     </div>
                                     <div class="mt-auto pt-3">
-                                        <small class="text-white-50"><i class="bi bi-lock-fill me-1"></i>Your data is encrypted and never shared</small>
+                                        <small class="text-white" style="opacity: 0.7;"><i class="bi bi-lock-fill me-1"></i>Your data is encrypted and never shared</small>
                                     </div>
                                 </div>
                             </div>
@@ -332,7 +332,7 @@
                                             </div>
                                             <div class="mb-3">
                                                 <input type="password" class="form-control form-control-lg" id="regPassword" 
-                                                    placeholder="Create password (min 6 chars)" required minlength="6" style="border-radius: 10px;">
+                                                    placeholder="Password (1 uppercase, 1 number, 1 special char)" required minlength="8" pattern="(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}" style="border-radius: 10px;">
                                             </div>
                                             <button type="submit" class="btn btn-dark w-100 py-3 fw-semibold" style="border-radius: 10px;">
                                                 <i class="bi bi-envelope me-2"></i>Register with Email
@@ -644,6 +644,16 @@
         });
         
         // ============ GOOGLE REGISTER ============
+        
+        // Strong password validation
+        function isStrongPassword(password) {
+            if (password.length < 8) return 'Password must be at least 8 characters.';
+            if (!/[A-Z]/.test(password)) return 'Password must contain at least 1 uppercase letter.';
+            if (!/[0-9]/.test(password)) return 'Password must contain at least 1 number.';
+            if (!/[!@#$%^&*()_+\-=\[\]{};:\'"\\|,.<>\/?]/.test(password)) return 'Password must contain at least 1 special character (!@#$%^&* etc).';
+            return null; // Valid
+        }
+
         function doGoogleRegister() {
             console.log('doGoogleRegister called');
             hideStep1Error();
@@ -685,6 +695,12 @@
             hideStep1Error();
             document.getElementById('step1Loading').classList.remove('d-none');
             
+            // Validate strong password
+            var pwError = isStrongPassword(password);
+            if (pwError) {
+                showRegError(pwError);
+                return;
+            }
             auth.createUserWithEmailAndPassword(email, password)
                 .then(function(result) {
                     currentUser = result.user;

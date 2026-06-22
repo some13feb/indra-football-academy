@@ -79,24 +79,15 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ============ UTILITY CLASSES ============ */
 .text-gradient {
-    background: linear-gradient(135deg, #FF69B4, #FF69B4);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #FF69B4 !important;
 }
 
 .text-gradient-green {
-    background: linear-gradient(135deg, #FF69B4, #FF69B4);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #FF69B4 !important;
 }
 
 .text-gradient-purple {
-    background: linear-gradient(135deg, #FF69B4, #FF69B4);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #FF69B4 !important;
 }
 
 .hover-lift {
