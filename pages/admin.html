@@ -659,46 +659,7 @@
                             </tr>
                         </thead>
                         <tbody id="programsTable">
-                            <tr>
-                                <td class="fw-semibold">Little Strikers</td>
-                                <td>6–10</td>
-                                                                <td>12/15</td>
-                                <td><span class="badge" style="background:#FF69B4; color:#fff;">Active</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-pencil"></i></button>
-                                    <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="fw-semibold">Elite Development</td>
-                                <td>11–16</td>
-                                                                <td>18/20</td>
-                                <td><span class="badge" style="background:#FF69B4; color:#fff;">Active</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-pencil"></i></button>
-                                    <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="fw-semibold">Pro Pathway</td>
-                                <td>16+</td>
-                                                                <td>8/12</td>
-                                <td><span class="badge" style="background:#FF69B4; color:#fff;">Active</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-pencil"></i></button>
-                                    <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="fw-semibold">Summer Camp 2026</td>
-                                <td>All</td>
-                                                                <td>0/30</td>
-                                <td><span class="badge bg-rose-subtle">Coming Soon</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-pencil"></i></button>
-                                    <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
-                                </td>
-                            </tr>
+                            <tr><td colspan="5" class="text-center text-muted py-3">Loading programs from database...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -1289,21 +1250,21 @@
     
     function loadPrograms() {
         if (typeof db === 'undefined') return;
-        var container = document.getElementById('programsList');
+        var container = document.getElementById('programsTable');
         if (!container) return;
         
         db.collection('programs').get().then(function(snapshot) {
             if (snapshot.empty) {
-                container.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No programs added yet.</td></tr>';
+                container.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3">No programs added yet. Click "Add Program" to create one.</td></tr>';
                 return;
             }
             var html = '';
             snapshot.forEach(function(doc) {
                 var p = doc.data();
                 html += '<tr>' +
-                    '<td>' + (p.name || '') + '</td>' +
+                    '<td class="fw-semibold">' + (p.name || '') + '</td>' +
                     '<td>' + (p.ageGroup || '') + '</td>' +
-                    '<td>' + (p.sessions || '') + '/week</td>' +
+                    '<td>' + (p.sessions || '-') + '/week</td>' +
                     '<td><span class="badge" style="background:#FF69B4; color:#fff;">Active</span></td>' +
                     '<td><button class="btn btn-sm btn-outline-danger" onclick="deleteProgram(\'' + doc.id + '\')"><i class="bi bi-trash"></i></button></td>' +
                 '</tr>';
