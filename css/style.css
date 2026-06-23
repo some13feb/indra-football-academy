@@ -1041,3 +1041,65 @@ a:hover {
     background-color: #FF69B4 !important;
     color: #fff !important;
 }
+
+
+/* ============ WHY CHOOSE US — WHITE CARDS, PINK ON HOVER ============ */
+#features .hover-lift,
+.hover-lift[class*="bg-white"],
+section .hover-lift {
+    background: #FFFFFF !important;
+    border: 1px solid #e9ecef !important;
+    color: #231F20 !important;
+    transition: all 0.3s ease;
+}
+
+#features .hover-lift:hover,
+section .hover-lift:hover {
+    background: #FF69B4 !important;
+    border-color: #FF69B4 !important;
+    color: #FFFFFF !important;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3) !important;
+}
+
+#features .hover-lift:hover .icon-circle,
+section .hover-lift:hover .icon-circle {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: #fff !important;
+}
+
+#features .hover-lift:hover .icon-circle i,
+section .hover-lift:hover .icon-circle i {
+    color: #fff !important;
+}
+
+#features .hover-lift:hover h5,
+#features .hover-lift:hover h6,
+#features .hover-lift:hover p,
+section .hover-lift:hover h5,
+section .hover-lift:hover h6,
+section .hover-lift:hover p {
+    color: #fff !important;
+}
+
+/* Icon circle default — black border on white card */
+.icon-circle {
+    background: rgba(255, 105, 180, 0.1) !important;
+    border: 2px solid #FF69B4 !important;
+}
+.icon-circle i {
+    color: #FF69B4 !important;
+}
+
+
+/* ============ NAVBAR NAV-LINK ACTIVE — TEXT ONLY, NO BG ============ */
+#mainNavbar .nav-link.active,
+.navbar .nav-link.active {
+    background-color: transparent !important;
+    color: #FF69B4 !important;
+}
+
+#mainNavbar .nav-link:hover {
+    background-color: transparent !important;
+    color: #FF69B4 !important;
+}
