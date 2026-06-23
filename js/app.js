@@ -279,3 +279,41 @@ function throttle(func, limit = 100) {
         }
     };
 }
+
+
+// ============ MOBILE NAV — AUTO CLOSE ============
+(function() {
+    var navCollapse = document.getElementById('navbarNav');
+    if (!navCollapse) return;
+    
+    // Close on scroll
+    window.addEventListener('scroll', function() {
+        var bsCollapse = bootstrap.Collapse.getInstance(navCollapse);
+        if (bsCollapse && navCollapse.classList.contains('show')) {
+            bsCollapse.hide();
+        }
+    });
+    
+    // Close when a nav link is clicked
+    var navLinks = navCollapse.querySelectorAll('.nav-link');
+    navLinks.forEach(function(link) {
+        link.addEventListener('click', function() {
+            var bsCollapse = bootstrap.Collapse.getInstance(navCollapse);
+            if (bsCollapse && navCollapse.classList.contains('show')) {
+                bsCollapse.hide();
+            }
+        });
+    });
+    
+    // Close when clicking outside the nav
+    document.addEventListener('click', function(e) {
+        if (!navCollapse.contains(e.target) && 
+            !e.target.classList.contains('navbar-toggler') &&
+            !e.target.closest('.navbar-toggler')) {
+            var bsCollapse = bootstrap.Collapse.getInstance(navCollapse);
+            if (bsCollapse && navCollapse.classList.contains('show')) {
+                bsCollapse.hide();
+            }
+        }
+    });
+})();
