@@ -64,7 +64,7 @@
         }
         
         .admin-sidebar .nav-link.active {
-            background: rgba(233, 30, 99, 0.3);
+            background: rgba(255, 105, 180, 0.3);
             border-left: 3px solid #FF69B4;
         }
         
@@ -474,7 +474,7 @@
                                 <small class="text-muted fw-semibold">Gallery Photos</small>
                                 <h3 class="fw-bold mb-0 mt-1" id="statPhotos">0</h3>
                             </div>
-                            <div class="stat-icon bg-success bg-opacity-10">
+                            <div class="stat-icon bg-light">
                                 <i class="bi bi-images text-dark"></i>
                             </div>
                         </div>
@@ -1422,9 +1422,11 @@
             loadAllAdminData();
         } else if (ELEVATED_ADMINS.includes(email)) {
             // Elevated sub-admin — full admin access
+            currentUserRole = 'superadmin';
+            document.getElementById('authGuard').classList.add('hidden');
+            document.getElementById('adminName').textContent = user.displayName + ' (Elevated Admin)';
             document.querySelectorAll('[data-admin-only]').forEach(el => el.style.display = 'block');
-            showSection('dashboard');
-            document.getElementById('userRole').textContent = '⚡ Elevated Admin';
+            switchSection('dashboard');
             loadAllAdminData();
         } else if (SUB_ADMINS.includes(email)) {
             currentUserRole = 'subadmin';
